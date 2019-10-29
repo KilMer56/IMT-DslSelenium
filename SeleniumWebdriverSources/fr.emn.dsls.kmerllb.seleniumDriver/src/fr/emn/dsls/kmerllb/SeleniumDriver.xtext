@@ -2,28 +2,18 @@ grammar org.xtext.example.mydsl.SeleniumDriver with org.eclipse.xtext.common.Ter
 
 generate seleniumDriver "http://www.xtext.org/example/mydsl/SeleniumDriver"
 
-
 TaskFlow:
-	lines+=Line*;
+	actions+=Action*;
 	
-Line:
-	line=Task|ElementInstanciation;
-	
-Task:
-	target=ElementRef'.'command=Command'('value=STRING?');';
+Action:
+	elem=Element'.'command=Command'('value=STRING?')';
 
 Command:
 	{Command}
 	cmd=ActionCommandType|{Command} VerifyCommandType;
 	
 Element:
-	name=ID;
-	
-ElementRef:
-	ref=[Element];
-	
-ElementInstanciation:
-	ref=Element '=' type=ElementType'('attrs=Attributes?')';
+	type=ElementType'('attrs=Attributes?')';
 	
 Attributes: 
 	attrs += Attribute (',' attrs += Attribute)*;
@@ -32,10 +22,10 @@ Attribute:
 	attType=STRING':'attVal=STRING;
 
 ElementType: 
-	"page" | "browser" | "link" | "button" | "field";
+	"page" | "browser" | "link" | "button" | "field" | "image";
 	
 ActionCommandType:
-	"open" | "click" | "goTo";
+	"open" | "click" | "goTo" | "contains";
 
 VerifyCommandType:
 	"verify";
