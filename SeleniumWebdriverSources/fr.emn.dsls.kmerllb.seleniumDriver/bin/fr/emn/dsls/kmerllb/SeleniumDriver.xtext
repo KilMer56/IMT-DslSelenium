@@ -2,59 +2,66 @@ grammar org.xtext.example.mydsl.SeleniumDriver with org.eclipse.xtext.common.Ter
 
 generate seleniumDriver "http://www.xtext.org/example/mydsl/SeleniumDriver"
 
-TestFlow:
-	suites+=TestSuite*;
-
 TestSuite:
-	'TestSuite' number=INT '{'
-		actions+=Action*
+	'TestSuite' suiteName=ID '{'
+		cases+=TestCase*
 	'}';
+
+TestCase:
+	'TestCase' caseName=ID '{'
+		lines+=Line*
+	'}';
+	
+Line:
+	VariableAssignation | Action;
+
+Variable:
+	name=ID;
+	
+VariableRef:
+	ref=[Variable];
+
+VariableAssignation:
+	var=Variable '=' value=WebElement;
 	
 Action:
 	elem=Element'.'command=Command'('param=Parameter?')';
 
 Command:
-	{Command} ActionCommandType | {Command} VerifyCommandType;
+	actionCmd=ActionCommandType | VerifyCmd=VerifyCommandType;
 	
 Element:
-	{Element} GlobalElementType | WebElement;
+	globalElement=GlobalElementType | WebElement | VariableRef;
 
 WebElement:
-	type=WebElementType('('selector=Selector')');
+	type=WebElementType('('selector=Selector')')('.'actionCmd=ActionCommandType)?('['index=INT']')?('.'attribute=ID)?;
 
 Selector:
-	{Selector}
-	PropertyType | Attributes;
+	property=PropertyType | Attributes;
 	
 Attributes: 
 	attrs += Attribute (',' attrs += Attribute)*;
 
 Attribute:
-	attType=ID':'attVal=STRING;
+	attType=ID':'value=AttributeValue;
+
+AttributeValue:
+	val=STRING | VariableRef('.'attribute=STRING)?;
 	
 Parameter:
-	{Parameter} STRING | WebElement;
+	param=STRING | WebElement | VariableRef;
 	
 PropertyType:
-	"ALL";
+	"ALL" | "FIRST";
 
 GlobalElementType:
 	"browser" | "page";
 
 WebElementType: 
-	"link" | "button" | "field" | "image" | "div";
+	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox";
 	
 ActionCommandType:
-	"open" | "click" | "goTo" | "contains" | "fill";
+	"open" | "click" | "goTo" | "contains" | "write" | "select" | "check" | "uncheck" | "parent";
 
 VerifyCommandType:
 	"verify";
-	
-//BrowserElementType:
-//	"Window" | "Firefox" | "Opera";
-	
-//Page:
-//	name=STRING;
-//
-//Browser:
-//	"browser(" browser=BrowserElementType ")";
