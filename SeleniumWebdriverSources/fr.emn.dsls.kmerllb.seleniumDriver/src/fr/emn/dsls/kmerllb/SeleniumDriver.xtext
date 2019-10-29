@@ -1,0 +1,50 @@
+grammar org.xtext.example.mydsl.SeleniumDriver with org.eclipse.xtext.common.Terminals
+
+generate seleniumDriver "http://www.xtext.org/example/mydsl/SeleniumDriver"
+
+
+TaskFlow:
+	lines+=Line*;
+	
+Line:
+	line=Task|ElementInstanciation;
+	
+Task:
+	target=ElementRef'.'command=Command'('value=STRING?');';
+
+Command:
+	{Command}
+	cmd=ActionCommandType|{Command} VerifyCommandType;
+	
+Element:
+	name=ID;
+	
+ElementRef:
+	ref=[Element];
+	
+ElementInstanciation:
+	ref=Element '=' type=ElementType'('attrs=Attributes?')';
+	
+Attributes: 
+	attrs += Attribute (',' attrs += Attribute)*;
+
+Attribute:
+	attType=STRING':'attVal=STRING;
+
+ElementType: 
+	"page" | "browser" | "link" | "button" | "field";
+	
+ActionCommandType:
+	"open" | "click" | "goTo";
+
+VerifyCommandType:
+	"verify";
+	
+//BrowserElementType:
+//	"Window" | "Firefox" | "Opera";
+	
+//Page:
+//	name=STRING;
+//
+//Browser:
+//	"browser(" browser=BrowserElementType ")";
