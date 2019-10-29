@@ -2,40 +2,50 @@ grammar org.xtext.example.mydsl.SeleniumDriver with org.eclipse.xtext.common.Ter
 
 generate seleniumDriver "http://www.xtext.org/example/mydsl/SeleniumDriver"
 
+TestFlow:
+	suites+=TestSuite*;
 
-TaskFlow:
-	lines+=Line*;
+TestSuite:
+	'TestSuite' number=INT '{'
+		actions+=Action*
+	'}';
 	
-Line:
-	line=Task|ElementInstanciation;
-	
-Task:
-	target=ElementRef'.'command=Command'('value=STRING?');';
+Action:
+	elem=Element'.'command=Command'('param=Parameter?')';
 
 Command:
-	{Command}
-	cmd=ActionCommandType|{Command} VerifyCommandType;
+	{Command} ActionCommandType | {Command} VerifyCommandType;
 	
 Element:
-	name=ID;
-	
-ElementRef:
-	ref=[Element];
-	
-ElementInstanciation:
-	ref=Element '=' type=ElementType'('attrs=Attributes?')';
+	{Element} GlobalElementType | WebElement;
+
+WebElement:
+	type=WebElementType('('selector=Selector')');
+
+Selector:
+	{Selector}
+	PropertyType | Attributes;
 	
 Attributes: 
 	attrs += Attribute (',' attrs += Attribute)*;
 
 Attribute:
-	attType=STRING':'attVal=STRING;
+	attType=ID':'attVal=STRING;
+	
+Parameter:
+	{Parameter} STRING | WebElement;
+	
+PropertyType:
+	"ALL";
 
-ElementType: 
-	"page" | "browser" | "link" | "button" | "field";
+GlobalElementType:
+	"browser" | "page";
+
+WebElementType: 
+	"link" | "button" | "field" | "image" | "div";
 	
 ActionCommandType:
-	"open" | "click" | "goTo";
+	"open" | "click" | "goTo" | "contains" | "fill";
 
 VerifyCommandType:
 	"verify";

@@ -1,35 +1,34 @@
-//Test1
-browser.open()
-browser.goTo("http://www.imt-atlantique.fr/fr")
-page.contains(link(content:"Toutes les actualités"))
+TestSuite 1 {	
+	browser.open()
+	browser.goTo("http://www.imt-atlantique.fr/fr")
+	page.contains(link(content:"Toutes les actualités"))
+}
 
-//Test2
+TestSuite 2 {	
+	browser.open()
+	browser.goTo("http://www.imt-atlantique.fr/fr")
+	link(content:"Toutes les actualités").click()
+	//ou 
+	//actuLink =link(label:"Toutes les actualités")
+	//actuLink.click()
+	page.contains(link(content:"Accueil"))
+}
 
-browser.open()
-browser.goTo("http://www.imt-atlantique.fr/fr")
-link(content:"Toutes les actualités").click()
-//ou 
-//actuLink =link(label:"Toutes les actualités")
-//actuLink.click()
-page.contains(link(content:"Accueil"))
+TestSuite 3 {
+	browser.open()
+	browser.goTo("http://www.imt-atlantique.fr/fr")
+	link(label:"Toutes les actualités").click()
+	image(alt:"Accueil").click()
+	page.contains(link(content:"Toutes les actualités"))
+}
 
-//Test3
-browser(IE6)
-browser.open()
-browser.goTo("http://www.imt-atlantique.fr/fr")
-link(label:"Toutes les actualités").click()
-image(alt:"Accueil").click()
-page.contains(link(content:"Toutes les actualités"))
-
-//Test4
-browser(Firefox)
-browser.open()
-browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
-field(id:"edit-rechercher").fill("Donald Trump")
-link(value:"Appliquer les filtres").click()
-page.contains(div(content:"Toutes les actualités"))
-
-//Test 5
+TestSuite 4 {
+	browser.open()
+	browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
+	field(id:"edit-rechercher").fill("Donald Trump")
+	link(value:"Appliquer les filtres").click()
+	page.contains(div(content:"Toutes les actualités"))
+}
 
 
 
