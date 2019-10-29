@@ -58,6 +58,17 @@ TestSuite suite1 {
 		page.contains(title(content:title.content))
 	}
 	
+	TestCase case8 {
+        browser.open()
+        browser.goTo("http://www.imt-atlantique.fr/fr")
+        title = div(class:"actu_home_ctner_inner_cell1_titre")[2]
+        url = div(class:"actu_home_ctner_inner_cell1_titre")[2].parent()
+        browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
+        field(id:"edit-rechercher").fill(title.content)
+        button(value:"Appliquer les filtres").click()
+        page.contains(link(href:url.href))
+    }
+	
 
 }
 
