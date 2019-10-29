@@ -26,8 +26,27 @@ TestSuite 4 {
 	browser.open()
 	browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
 	field(id:"edit-rechercher").fill("Donald Trump")
-	link(value:"Appliquer les filtres").click()
+	button(value:"Appliquer les filtres").click()
 	page.contains(div(content:"Toutes les actualités"))
+}
+
+TestSuite 5 {
+	browser.open()
+	browser.goTo("http://www.imt-atlantique.fr/fr/formation/trouver-ma-formation")
+	checkbox(ALL).check()
+	checkbox(label:"Anglais"|"A domicile"|"Temps plein")
+	button(value:"Appliquer les critéres").click()
+	page.contains(div(content:"No found course matching your criteria."))
+
+}
+
+TestSuite 6 {
+	browser.open()
+	browser.goTo("http://www.imt-atlantique.fr/fr/rechercher")
+	field(label:"Rechercher").write("2007")
+	select(label:"Période de publication").select("Le mois dernier")
+	button(value:"Appliquer les filtres").click()
+	page.contains(div(content:"Aucun résultat ne correspond à votre recherche."))
 }
 
 
