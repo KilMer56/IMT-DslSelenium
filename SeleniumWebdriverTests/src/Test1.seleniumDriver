@@ -1,0 +1,8 @@
+//Test1
+browser(Window);
+browser.open();
+browser.goTo("http://www.imt-atlantique.fr/fr");
+page.contains(link(label:"Toutes les actualités"));
+
+//Test2
+
