@@ -48,12 +48,22 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	def generateTestCaseBody(TestCase tc) '''
 	private static void  «tc.caseName»() {
 		«FOR line : tc.lines»
-			«line.parseLigne»;
+			«IF line instanceof Action»
+						«line.parseLigne»;
+			«ENDIF»
+			«IF line instanceof VariableAssignation»
+						«line.parseLigne»;;
+			«ENDIF»
 		«ENDFOR»
 	}
 	'''
 	
-	def parseLigne(Line line) '''
+	def parseLigne(VariableAssignation line) '''
+	
+	
+	'''
+	def parseLigne(Action line) '''
+	
 	
 	'''
 }
