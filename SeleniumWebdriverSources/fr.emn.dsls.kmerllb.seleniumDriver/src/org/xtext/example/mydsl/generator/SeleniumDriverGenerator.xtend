@@ -64,19 +64,56 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	'''
 	def parseLigne(Action action) '''
 		
-		«IF action.elem instanceof WebElement»
-			webelement
-		«ENDIF»
-		«IF action.elem instanceof VariableRef»
-			variableref
-		«ENDIF»
+		«action.elem.parseElement»
+		«action.command.parseCommand(action.param)»
+			
 		
-	
+
 	'''
 	
-	//«IF action.elem instanceof GlobalElementType»
-	//		«action.parseLigne»
-	//	«ENDIF»
-	// WebDriver driver = new FirefoxDriver();
-	// driver.get('http://www.google.com');
+	def parseElement(Element elem)
+	{	if( elem instanceof WebElement)
+		{	return "todo webelement"}
+
+		if( elem instanceof VariableRef)
+		{	return "todo variableref";}
+	}
+	
+	def parseCommand(String command,Parameter param){
+	    switch command {
+     		case "open" 	: 
+     		''' 
+     			WebDriver driver = new ChromeDriver();
+     			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+     		'''
+      		case 'click'	: "It's some string."
+      		case 'goTo' 	: ''' driver.get(«param.parseParameter»);''' 
+      		case 'exist' 	: "It's some string."
+      		case 'write' 	: ''' write(«param.parseParameter»);''' 
+      		case 'select' 	: "It's some string."
+      		case 'check' 	: "It's some string."
+      		case 'uncheck' 	: "It's some string."
+      		case 'parent'  	: "It's some string."
+      		default : ""
+   		 }
+    }
+    
+    def parseParameter(Parameter param)
+    {
+    	if( param instanceof WebElement)
+		{	return "todo webelement"}
+
+		if( param instanceof VariableRef)
+		{	return "todo variableref";}
+	
+		return ''' "param.param" ''' ;
+		
+    }
+	
+		
+
+	
+	
+	
+	
 }

@@ -1,9 +1,11 @@
-TestSuite suite1 {
+TestSuite testok {
 	TestCase case1 {	
 		browser.open()
 		browser.goTo("http://www.imt-atlantique.fr/fr")
 		link(content:"Toutes les actualités").exist()
 	}
+}
+TestSuite brokenTests {
 	
 	TestCase case2 {	
 		browser.open()
