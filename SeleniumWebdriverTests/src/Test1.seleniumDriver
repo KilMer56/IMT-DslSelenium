@@ -9,9 +9,6 @@ TestSuite suite1 {
 		browser.open()
 		browser.goTo("http://www.imt-atlantique.fr/fr")
 		link(content:"Toutes les actualités").click()
-		//ou 
-		//actuLink =link(label:"Toutes les actualités")
-		//actuLink.click()
 		page.contains(link(content:"Accueil"))
 	}
 	
