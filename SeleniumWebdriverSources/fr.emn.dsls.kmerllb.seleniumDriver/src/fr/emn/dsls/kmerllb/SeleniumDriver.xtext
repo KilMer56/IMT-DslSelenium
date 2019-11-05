@@ -25,16 +25,14 @@ VariableAssignation:
 	var=Variable '=' value=WebElement;
 	
 Action:
-	elem=Element'.'command=Command'('param=Parameter?')';
+	elem=Element'.'command=ActionCommandType'('param=Parameter?')';
 
-Command:
-	actionCmd=ActionCommandType | VerifyCmd=VerifyCommandType;
 	
 Element:
 	globalElement=GlobalElementType | WebElement | VariableRef;
 
 WebElement:
-	type=WebElementType('('selector=Selector')')('.'actionCmd=ActionCommandType)?('['index=INT']')?('.'attribute=ID)?;
+	type=WebElementType('('selector=Selector')')('['index=INT']')?('.'attribute=ID)?;//('.'actionCmd=ActionCommandType)?
 
 Selector:
 	property=PropertyType | Attributes;
@@ -52,7 +50,7 @@ Parameter:
 	param=STRING | WebElement | VariableRef;
 	
 PropertyType:
-	"ALL" | "FIRST";
+	"*" ;
 
 GlobalElementType:
 	"browser" | "page";
@@ -61,7 +59,5 @@ WebElementType:
 	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox";
 	
 ActionCommandType:
-	"open" | "click" | "goTo" | "contains" | "write" | "select" | "check" | "uncheck" | "parent";
+	"open" | "click" | "goTo" | "exist" | "write" | "select" | "check" | "uncheck" | "parent";
 
-VerifyCommandType:
-	"verify";
