@@ -1,0 +1,7 @@
+TestSuite testok {
+	TestCase case1 {	
+		browser.open()
+		browser.goTo("http://www.imt-atlantique.fr/fr")
+		link(content:"Toutes les actualités").exist()
+	}
+}

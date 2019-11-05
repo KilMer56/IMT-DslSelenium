@@ -73,7 +73,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	
 	def parseElement(Element elem)
 	{	if( elem instanceof WebElement)
-		{	return "todo webelement"}
+		{	return elem.createWebElement}
 
 		if( elem instanceof VariableRef)
 		{	return "todo variableref";}
@@ -106,13 +106,34 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		if( param instanceof VariableRef)
 		{	return "todo variableref";}
 	
-		return ''' "param.param" ''' ;
+		return ''' "«param.param»" ''' ;
 		
     }
+    
+    def createWebElement(WebElement we)
+    {	switch we.type {
+     		case "link" 	: ''' WebElement link = driver.findElement(By.xpath("//a[text()='Toutes les actualits']"));''' 
+     		case "button" 	: ''' WebElement button = driver.findElement(By.xpath("todo"));''' 
+     		case "field" 	: ''' WebElement field = driver.findElement(By.xpath("todo"));''' 
+     		case "image" 	: ''' WebElement image = driver.findElement(By.xpath("todo"));''' 
+     		case "div"	 	: ''' WebElement div = driver.findElement(By.xpath("todo"));''' 
+     		case "checkbox"	: ''' WebElement checkbox = driver.findElement(By.xpath("todo"));''' 
+     		case "combobox" : ''' WebElement combobox = driver.findElement(By.xpath("todo"));''' 
+     		case "title"	 : ''' WebElement title = driver.findElement(By.xpath("todo"));''' 
+   
+      		default : ""
+   		 }
+   	}
+    
+ 
 	
 		
 
+	//link(content:"Toutes les actualités").exist()
 	
+	//WebElement link = driver.findElement(By.xpath("//a[text()='Toutes les actualits']"));	
+	//Assert.assertNotNull(link);	
+	//driver.close();
 	
 	
 	
