@@ -39,7 +39,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		} 
 		
 		«FOR tc : ts.cases»
-		 	«tc.generateTestCaseBody»();
+		 	«tc.generateTestCaseBody»
 		«ENDFOR»
 	}
 	'''
@@ -49,21 +49,34 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	private static void  «tc.caseName»() {
 		«FOR line : tc.lines»
 			«IF line instanceof Action»
-						«line.parseLigne»;
+						«line.parseLigne»
 			«ENDIF»
 			«IF line instanceof VariableAssignation»
-						«line.parseLigne»;;
+						«line.parseLigne»
 			«ENDIF»
 		«ENDFOR»
 	}
 	'''
 	
 	def parseLigne(VariableAssignation line) '''
-	
+		//Todo capitalize first letter
+		«line.value.type» «line.^var.name» = driver.todo;
+	'''
+	def parseLigne(Action action) '''
+		
+		«IF action.elem instanceof WebElement»
+			webelement
+		«ENDIF»
+		«IF action.elem instanceof VariableRef»
+			variableref
+		«ENDIF»
+		
 	
 	'''
-	def parseLigne(Action line) '''
 	
-	
-	'''
+	//«IF action.elem instanceof GlobalElementType»
+	//		«action.parseLigne»
+	//	«ENDIF»
+	// WebDriver driver = new FirefoxDriver();
+	// driver.get('http://www.google.com');
 }

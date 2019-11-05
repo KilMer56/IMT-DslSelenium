@@ -29,7 +29,7 @@ Action:
 
 	
 Element:
-	globalElement=GlobalElementType | WebElement | VariableRef;
+	GlobalElement| WebElement | VariableRef;
 
 WebElement:
 	type=WebElementType('('selector=Selector')')('['index=INT']')?('.'attribute=ID)?;//('.'actionCmd=ActionCommandType)?
@@ -52,8 +52,8 @@ Parameter:
 PropertyType:
 	"*" ;
 
-GlobalElementType:
-	"browser" | "page";
+GlobalElement:
+	type="browser";
 
 WebElementType: 
 	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox";
