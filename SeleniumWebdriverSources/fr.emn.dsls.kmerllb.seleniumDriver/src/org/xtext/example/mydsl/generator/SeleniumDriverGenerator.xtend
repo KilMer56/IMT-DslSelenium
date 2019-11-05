@@ -18,7 +18,8 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		for (ts : resource.allContents.toIterable.filter(TestSuite)) {
-			fsa.generateFile("«ts.suiteName»Test" + ".java", ts.generateTestSuite)
+			//TODO force fisrt letter to uppercase
+			fsa.generateFile(ts.suiteName+"Test" + ".java", ts.generateTestSuite)
 		
 		}
 	
@@ -38,7 +39,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		} 
 		
 		«FOR tc : ts.cases»
-		 	«tc.caseName»();
+		 	«tc.generateTestCaseBody»();
 		«ENDFOR»
 	}
 	'''
@@ -46,8 +47,13 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 
 	def generateTestCaseBody(TestCase tc) '''
 	private static void  «tc.caseName»() {
-	
-	
+		«FOR line : tc.lines»
+			«line.parseLigne»;
+		«ENDFOR»
 	}
+	'''
+	
+	def parseLigne(Line line) '''
+	
 	'''
 }
