@@ -18,12 +18,15 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		for (ts : resource.allContents.toIterable.filter(TestSuite)) {
-			//TODO force fisrt letter to uppercase
-			fsa.generateFile(ts.suiteName+"Test" + ".java", ts.generateTestSuite)
+			fsa.generateFile(FirstUpperCase(ts.suiteName)+"Test" + ".java", ts.generateTestSuite)
 		
 		}
 	
 	}
+	def static String FirstUpperCase(String str) {
+    	return  str.substring(0, 1).toUpperCase() + str.substring(1);
+  	}
+
 	
 	def generateTestSuite(TestSuite ts) '''
 	import seleniumDriver.TestSuite;
@@ -123,28 +126,50 @@ class SeleniumDriverGenerator extends AbstractGenerator {
     
     def createWebElement(WebElement we)
     {	switch we.type {
-     		case "link" 	: ''' WebElement link = driver.findElement(By.xpath("//a[text()='Toutes les actualits']"));''' 
-     		case "button" 	: ''' WebElement button = driver.findElement(By.xpath("todo"));''' 
-     		case "field" 	: ''' WebElement field = driver.findElement(By.xpath("todo"));''' 
-     		case "image" 	: ''' WebElement image = driver.findElement(By.xpath("todo"));''' 
-     		case "div"	 	: ''' WebElement div = driver.findElement(By.xpath("todo"));''' 
-     		case "checkbox"	: ''' WebElement checkbox = driver.findElement(By.xpath("todo"));''' 
-     		case "combobox" : ''' WebElement combobox = driver.findElement(By.xpath("todo"));''' 
-     		case "title"	 : ''' WebElement title = driver.findElement(By.xpath("todo"));''' 
+     		case "link" 	: ''' WebElement link = driver.findElement(«we.selector.parseWebElementSelector("a")»);''' 
+     		case "button" 	: ''' WebElement button = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
+     		case "field" 	: ''' WebElement field = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
+     		case "image" 	: ''' WebElement image = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
+     		case "div"	 	: ''' WebElement div = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
+     		case "checkbox"	: ''' WebElement checkbox = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
+     		case "combobox" : ''' WebElement combobox = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
+     		case "title"	 : ''' WebElement title = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
    
       		default : ""
    		 }
    	}
-    
+   	
+   	def parseWebElementSelector(Selector selector,String type){
+   	
+		if( selector instanceof Attributes)
+		{	
+			for(Attribute att: selector.getAttrs()){
+				switch att.getAttType{
+					//TODO map with right attribut for all
+					case "content" : return "By.xpath(\"//"+type+"[text()='"+att.value.getVal()+"']\")"
+					case "alt" : return "By.xpath(\"//"+type+"[alt()='"+att.value.getVal()+"']\")"
+					case "label" : return "By.xpath(\"//"+type+"[label()='"+att.value.getVal()+"']\")"
+					case "id" : return "By.xpath(\"//"+type+"[id()='"+att.value.getVal()+"']\")"
+					case "value" : return "By.xpath(\"//"+type+"[text()='"+att.value.getVal()+"']\")"
+					case "class" : return "By.xpath(\"//"+type+"[@class()='"+att.value.getVal()+"']\")"
+					case "href" : return "By.xpath(\"//"+type+"[href()='"+att.value.getVal()+"']\")"
+				}
+			}
+			return "todo plusieurs attributs";
+			
+			
+		}
+		else{
+			return "By.tagName(\""+type+"\")"
+		}
+   	}
+   	
+
  
 	
 		
 
-	//link(content:"Toutes les actualités").exist()
-	
-	//WebElement link = driver.findElement(By.xpath("//a[text()='Toutes les actualits']"));	
-	//Assert.assertNotNull(link);	
-	//driver.close();
+
 	
 	
 	

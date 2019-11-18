@@ -46,7 +46,7 @@ Attribute:
 	attType=ID':'value=AttributeValue;
 
 AttributeValue:
-	val=STRING | VariableRef('.'attribute=STRING)?;
+	val=STRING | VariableRef;//('.'attribute=STRING)?;
 	
 Parameter:
 	param=STRING | WebElement | VariableRef;
