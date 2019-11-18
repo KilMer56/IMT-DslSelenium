@@ -24,6 +24,8 @@ SeleniumWebdriverSources/fr.emn.dsls.kmerllb.seleniumDriver/src/org/xtext/exampl
 SeleniumWebdriverSources/fr.emn.dsls.kmerllb.seleniumDriver/src/org/xtext/example/mydsl/validation/
 SeleniumWebdriverSources/fr.emn.dsls.kmerllb.seleniumDriver/xtend-gen/
 SeleniumWebdriverTests/.project
+*MANIFEST.MF
+SeleniumWebdriverSources/fr.emn.dsls.kmerllb.seleniumDriver/build.properties
 
 
 *jar
