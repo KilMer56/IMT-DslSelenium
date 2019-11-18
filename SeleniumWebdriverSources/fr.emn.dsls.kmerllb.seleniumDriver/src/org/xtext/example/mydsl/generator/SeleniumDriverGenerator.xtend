@@ -47,47 +47,58 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 
 	def generateTestCaseBody(TestCase tc) '''
 	private static void  «tc.caseName»() {
+		WebDriver driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		
 		«FOR line : tc.lines»
 			«IF line instanceof Action»
-						«line.parseLigne»
+				«line.parseLigne»
 			«ENDIF»
 			«IF line instanceof VariableAssignation»
-						«line.parseLigne»
+				«line.parseLigne»
+			«ENDIF»
+			«IF line instanceof Check»
+				«line.parseLigne»
 			«ENDIF»
 		«ENDFOR»
 	}
 	'''
 	
-	def parseLigne(VariableAssignation line) '''
-		//Todo capitalize first letter
+	def parseLigne(VariableAssignation line)'''
 		«line.value.type» «line.^var.name» = driver.todo;
 	'''
+	
 	def parseLigne(Action action) '''
-		
-		«action.elem.parseElement»
-		«action.command.parseCommand(action.param)»
-			
-		
-
+		«action.elem.parseElement».«action.command.parseCommand(action.param)»
 	'''
 	
-	def parseElement(Element elem)
-	{	if( elem instanceof WebElement)
-		{	return elem.createWebElement}
-
-		if( elem instanceof VariableRef)
-		{	return "todo variableref";}
-	}
+	def parseLigne(Check check) '''
+		«check.elem.parseElement»
+		«check.elem.parseCheck»
+	'''
+	
+	def parseCheck(Element elem)'''
+		«IF elem instanceof WebElement»
+			Assert.assertNotNull(«elem.type»);
+		«ENDIF»
+	'''
+	
+	def parseElement(Element elem)'''
+		«IF elem instanceof WebElement»
+			«elem.createWebElement»
+		«ENDIF»
+		«IF elem instanceof VariableRef»
+			todo variableref
+		«ENDIF»
+		«IF elem instanceof GlobalElement»
+			driver
+		«ENDIF»
+	'''
 	
 	def parseCommand(String command,Parameter param){
-	    switch command {
-     		case "open" 	: 
-     		''' 
-     			WebDriver driver = new ChromeDriver();
-     			driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-     		'''
-      		case 'click'	: "It's some string."
-      		case 'goTo' 	: ''' driver.get(«param.parseParameter»);''' 
+	    switch command {	
+      		case 'click'	: '''click();'''
+      		case 'goTo' 	: '''get(«param.parseParameter»);''' 
       		case 'exist' 	: "It's some string."
       		case 'write' 	: ''' write(«param.parseParameter»);''' 
       		case 'select' 	: "It's some string."

@@ -13,7 +13,7 @@ TestCase:
 	'}';
 	
 Line:
-	VariableAssignation | Action;
+	VariableAssignation | Action | Check;
 
 Variable:
 	name=ID;
@@ -25,16 +25,16 @@ VariableAssignation:
 	var=Variable '=' value=WebElement;
 	
 Action:
-	elem=Element'.'command=Command'('param=Parameter?')';
-
-Command:
-	actionCmd=ActionCommandType | VerifyCmd=VerifyCommandType;
+	elem=Element'.'command=ActionCommandType'('param=Parameter?')';
+	
+Check:
+	elem=Element'.'check=CheckCommandType'()';
 	
 Element:
-	globalElement=GlobalElementType | WebElement | VariableRef;
+	GlobalElement | WebElement | VariableRef;
 
 WebElement:
-	type=WebElementType('('selector=Selector')')('.'actionCmd=ActionCommandType)?('['index=INT']')?('.'attribute=ID)?;
+	type=WebElementType('('selector=Selector')')('['index=INT']')?('.'attribute=ID)?;//('.'actionCmd=ActionCommandType)?
 
 Selector:
 	property=PropertyType | Attributes;
@@ -52,16 +52,17 @@ Parameter:
 	param=STRING | WebElement | VariableRef;
 	
 PropertyType:
-	"ALL" | "FIRST";
+	"*" ;
 
-GlobalElementType:
-	"browser" | "page";
+GlobalElement:
+	type="browser";
 
 WebElementType: 
 	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox";
 	
 ActionCommandType:
-	"open" | "click" | "goTo" | "contains" | "write" | "select" | "check" | "uncheck" | "parent";
+	"click" | "goTo" | "write" | "select" | "check" | "uncheck" | "parent";
+	
+CheckCommandType:
+	"exist";
 
-VerifyCommandType:
-	"verify";
