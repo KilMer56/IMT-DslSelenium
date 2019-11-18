@@ -68,7 +68,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	'''
 	
 	def parseLigne(VariableAssignation line)'''
-		«line.value.type» «line.^var.name» = driver.todo;
+		«line.value.type» «line.^var.name» = «line.value.createWebElement»;
 	'''
 	
 	def parseLigne(Action action) '''
@@ -88,10 +88,10 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	
 	def parseElement(Element elem)'''
 		«IF elem instanceof WebElement»
-			«elem.createWebElement»
+			«elem.createWebElement»;
 		«ENDIF»
 		«IF elem instanceof VariableRef»
-			todo variableref
+			«elem.ref.name»
 		«ENDIF»
 		«IF elem instanceof GlobalElement»
 			driver
@@ -115,10 +115,10 @@ class SeleniumDriverGenerator extends AbstractGenerator {
     def parseParameter(Parameter param)
     {
     	if( param instanceof WebElement)
-		{	return "todo webelement"}
+		{	return createWebElement(param)}
 
 		if( param instanceof VariableRef)
-		{	return "todo variableref";}
+		{	return param.getRef().getName();}
 	
 		return ''' "«param.param»" ''' ;
 		
@@ -126,14 +126,14 @@ class SeleniumDriverGenerator extends AbstractGenerator {
     
     def createWebElement(WebElement we)
     {	switch we.type {
-     		case "link" 	: ''' WebElement link = driver.findElement(«we.selector.parseWebElementSelector("a")»);''' 
-     		case "button" 	: ''' WebElement button = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "field" 	: ''' WebElement field = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "image" 	: ''' WebElement image = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "div"	 	: ''' WebElement div = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "checkbox"	: ''' WebElement checkbox = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "combobox" : ''' WebElement combobox = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "title"	 : ''' WebElement title = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
+     		case "link" 	: ''' WebElement link = driver.findElement(«we.selector.parseWebElementSelector("a")»)''' 
+     		case "button" 	: ''' WebElement button = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "field" 	: ''' WebElement field = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "image" 	: ''' WebElement image = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "div"	 	: ''' WebElement div = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "checkbox"	: ''' WebElement checkbox = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "combobox" : ''' WebElement combobox = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "title"	 : ''' WebElement title = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
    
       		default : ""
    		 }
