@@ -180,13 +180,13 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 		{	
 			for(Attribute att: selector.getAttrs()){
 				switch att.getAttType{
-					case "content" : return "By.xpath(\"//"+type+"[text()='"+att.value.getVal()+"']\")"
-					case "alt" : return "By.xpath(\"//"+type+"[@alt='"+att.value.getVal()+"']\")"
-					case "label" : return "By.xpath(\"//"+type+"[label()='"+att.value.getVal()+"']\")"
-					case "id" : return "By.xpath(\"//"+type+"[id()='"+att.value.getVal()+"']\")"
-					case "value" : return "By.xpath(\"//"+type+"[text()='"+att.value.getVal()+"']\")"
-					case "class" : return "By.xpath(\"//"+type+"[@class()='"+att.value.getVal()+"']\")"
-					case "href" : return "By.xpath(\"//"+type+"[href()='"+att.value.getVal()+"']\")"
+					case "content" : return "By.xpath(\"//"+type+"[text()='"+parseAttributeValue(att.value)+"']\")"
+					case "alt" : return "By.xpath(\"//"+type+"[@alt='"+parseAttributeValue(att.value)+"']\")"
+					case "label" : return "By.xpath(\"//"+type+"[label()='"+parseAttributeValue(att.value)+"']\")"
+					case "id" : return "By.xpath(\"//"+type+"[id()='"+parseAttributeValue(att.value)+"']\")"
+					case "value" : return "By.xpath(\"//"+type+"[text()='"+parseAttributeValue(att.value)+"']\")"
+					case "class" : return "By.xpath(\"//"+type+"[@class()='"+parseAttributeValue(att.value)+"']\")"
+					case "href" : return "By.xpath(\"//"+type+"[href()='"+parseAttributeValue(att.value)+"']\")"
 				}
 			}
 			return "todo plusieurs attributs";
@@ -195,6 +195,20 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 			return "By.tagName(\""+type+"\")"
 		}
    	}
+   	
+   	def parseAttributeValue(AttributeValue attV){
+   		if(attV.^val === null){
+   			   	return (attV as StringValue).ref;
+   			}
+   		
+   		
+   		else{
+   			return "\" + "+ attV.^val.ref.name +"+\" "
+   		}
+   		
+   	}
+   	
+ 
    	
    	def parseAttribute(String attribute){
    		switch attribute {
