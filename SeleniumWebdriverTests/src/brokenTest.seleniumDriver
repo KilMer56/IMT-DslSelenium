@@ -1,0 +1,72 @@
+TestSuite brokenTests {
+	
+	TestCase case2 {	
+		//browser.open()
+		browser.goTo("http://www.imt-atlantique.fr/fr")
+		//link(content:"Toutes les actualités").click()
+		link(content:"Accueil").exist()
+	}
+	
+	TestCase case3 {
+		//browser.open()
+		browser.goTo("http://www.imt-atlantique.fr/fr")
+		//link(label:"Toutes les actualités").click()
+		//image(alt:"Accueil").click()
+		link(content:"Toutes les actualités").exist()
+	}
+	
+	TestCase case4 {
+		//browser.open()
+		browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
+		field(id:"edit-rechercher").write("Donald Trump")
+		//button(value:"Appliquer les filtres").click()
+		div(content:"Toutes les actualités").exist()
+	}
+	
+	TestCase case5 {
+		//browser.open()
+		browser.goTo("http://www.imt-atlantique.fr/fr/formation/trouver-ma-formation")
+		/*checkbox(*).uncheck()
+		//checkbox(label:"Anglais"|"A domicile"|"Temps plein").check()
+		checkbox(label:"Anglais").check()
+		checkbox(label:"A domicile").check()
+		checkbox(label:"Temps plein").check()
+		button(value:"Appliquer les critéres").click()*/
+		div(content:"No found course matching your criteria.").exist()
+	
+	}
+	
+	TestCase case6 {
+		//browser.open()
+		browser.goTo("http://www.imt-atlantique.fr/fr/rechercher")
+		field(label:"Rechercher").write("2007")
+		combobox(label:"Période de publication").select("Le mois dernier")
+		//button(value:"Appliquer les filtres").click()
+		div(content:"Aucun résultat ne correspond à votre recherche.").exist()
+	}
+	
+	TestCase case7 {
+		//browser.open()
+		browser.goTo("http://www.imt-atlantique.fr/fr")
+		myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[1].content
+		//div(class:"actu_home_ctner_inner_cell1_titre")[1].click()
+		title(content:myTitle).exist()
+	}
+	
+	TestCase case8 {
+        //browser.open()
+        browser.goTo("http://www.imt-atlantique.fr/fr")
+        myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[2].content
+        myUrl = div(class:"actu_home_ctner_inner_cell1_titre")[2].href
+        browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
+        field(id:"edit-rechercher").write(myTitle)
+        //button(value:"Appliquer les filtres").click()
+        link(href:myUrl).exist()
+    }
+}
+
+
+
+
+
+
