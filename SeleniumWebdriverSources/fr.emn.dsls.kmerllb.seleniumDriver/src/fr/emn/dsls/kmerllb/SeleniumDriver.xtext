@@ -13,7 +13,7 @@ TestCase:
 	'}';
 	
 Line:
-	VariableAssignation | Action | Check;
+	VariableAssignation | Action;
 
 Variable:
 	name=ID;
@@ -25,10 +25,7 @@ VariableAssignation:
 	var=Variable '=' value=WebElement;
 	
 Action:
-	elem=Element'.'command=ActionCommandType'('param=Parameter?')';
-	
-Check:
-	elem=Element'.'check=CheckCommandType'()';
+	elem=Element'.'command=ActionCommandType'('(param=Parameter)?')';
 	
 Element:
 	GlobalElement | WebElement | VariableRef;
@@ -49,20 +46,16 @@ AttributeValue:
 	val=STRING | VariableRef;//('.'attribute=STRING)?;
 	
 Parameter:
-	param=STRING | WebElement | VariableRef;
+	param=STRING | WebElement | VariableRef;	
+	
+GlobalElement:
+	type="browser";
 	
 PropertyType:
 	"*" ;
-
-GlobalElement:
-	type="browser";
 
 WebElementType: 
 	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox";
 	
 ActionCommandType:
-	"click" | "goTo" | "write" | "select" | "check" | "uncheck" | "parent";
-	
-CheckCommandType:
-	"exist";
-
+	"click" | "goTo" | "write" | "select" | "check" | "uncheck" | "parent" | "exist";

@@ -65,9 +65,6 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 			«IF line instanceof VariableAssignation»
 				«line.parseLigne»
 			«ENDIF»
-			«IF line instanceof Check»
-				«line.parseLigne»
-			«ENDIF»
 		«ENDFOR»
 		driver.close();
 	}
@@ -79,11 +76,6 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	
 	def parseLigne(Action action) '''
 		«action.elem.parseElement»«action.command.parseCommand(action.param)»
-	'''
-	
-	def parseLigne(Check check) '''
-		«check.elem.parseElement»
-		«check.elem.parseCheck»
 	'''
 	
 	def parseCheck(Element elem)'''
@@ -164,21 +156,9 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 				}
 			}
 			return "todo plusieurs attributs";
-			
-			
 		}
 		else{
 			return "By.tagName(\""+type+"\")"
 		}
    	}
-   	
-
- 
-	
-		
-
-
-	
-	
-	
 }
