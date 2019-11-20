@@ -40,7 +40,7 @@ Attributes:
 	attrs += Attribute (',' attrs += Attribute)*;
 
 Attribute:
-	attType=ID':'value=AttributeValue;
+	attType=AttributeType':'value=AttributeValue;
 
 AttributeValue:
 	val=STRING | VariableRef;//('.'attribute=STRING)?;
@@ -55,7 +55,7 @@ PropertyType:
 	"*" ;
 
 AttributeType:
-	"text" | "href";
+	"text" | "href" | "content" | "alt" | "label" | "id" | "value" |"class";
 
 WebElementType: 
 	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox";
