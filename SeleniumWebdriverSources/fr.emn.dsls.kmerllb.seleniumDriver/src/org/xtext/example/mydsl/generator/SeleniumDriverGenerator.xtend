@@ -20,14 +20,12 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		for (ts : resource.allContents.toIterable.filter(TestSuite)) {
 			fsa.generateFile(FirstUpperCase(ts.suiteName)+"Test" + ".java", ts.generateTestSuite)
-		
 		}
-	
 	}
+	
 	def static String FirstUpperCase(String str) {
     	return  str.substring(0, 1).toUpperCase() + str.substring(1);
   	}
-
 	
 	def generateTestSuite(TestSuite ts) '''
 	import seleniumDriver.TestSuite;
@@ -71,48 +69,58 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	'''}
 	
 	def parseLigne(VariableAssignation line)'''
-		«line.value.type» «line.^var.name» = «line.value.createWebElement»;
+		String «line.^var.name» = «line.value.findWebElement»
 	'''
 	
 	def parseLigne(Action action){ 
-		//todo check si commande = exist
-			//parse l'elem + assert sa reference
-		
-		//sinon
 		if( action.elem instanceof WebElement){
-			if(action.command.equals("exist") ){
+			if(action.command.equals("exist")){
 				return parseExist(action.elem);
 			}
-			else{
+			else if(action.command.equals("equals")) {
+				return parseEquals(action.elem, action.param);
+			}
+			else {
 				return createWebElement(action.elem as WebElement)+"\n"+
 				parseCommand(action.command, action.param,(action.elem as WebElement).type+variableIt);
 			}
 		}
+		
 		if(action.elem instanceof VariableRef)
-			return  (action.elem as VariableRef).ref.name+";";
+			return  (action.elem as VariableRef).ref.name;
+			
 		if(action.elem instanceof GlobalElement)
-			return "driver."+parseCommand(action.command, action.param,"");
-		//«action.elem.parseElement»«action.command.parseCommand(action.param,action.elem.type)»
+			return "driver"+parseCommand(action.command, action.param,"");
 	}
 	
 	
 	def parseExist(Element elem)'''
 		«IF elem instanceof WebElement»
-			«elem.createWebElement»;
+			«elem.createWebElement»
 			Assert.assertNotNull(«elem.type+variableIt»);
 		«ENDIF»
 	'''
 	
-	
-
+	def parseEquals(Element elem, Parameter param)'''
+		«IF elem instanceof WebElement»
+			«elem.createWebElement»
+			Assert.assertTrue(«elem.type+variableIt».getText().equals(«(param as VariableRef).ref.name»));
+		«ENDIF»
+	'''
 	
 	def parseCommand(String command,Parameter param,String nomElem){
 		
 	    switch command {	
       		case 'click'	: '''«nomElem».click();'''
-      		case 'goTo' 	: '''get(«param.parseParameter»);''' 
-      		case 'exist' 	: "It's some string."
-      		case 'write' 	: '''«nomElem». write(«param.parseParameter»);''' 
+      		
+      		case 'goTo' 	: '''.get(«param.parseParameter»);
+      		
+new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(
+	By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click();
+	
+''' 
+	
+      		case 'write' 	: '''«nomElem».write(«param.parseParameter»)''' 
       		case 'select' 	: "It's some string."
       		case 'check' 	: "It's some string."
       		case 'uncheck' 	: "It's some string."
@@ -124,7 +132,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
     def parseParameter(Parameter param)
     {
     	if( param instanceof WebElement)
-		{	return createWebElement(param)}
+		{	return createWebElement(param)+"\n"}
 
 		if( param instanceof VariableRef)
 		{	return param.getRef().getName();}
@@ -136,14 +144,31 @@ class SeleniumDriverGenerator extends AbstractGenerator {
     def createWebElement(WebElement we)
     {	variableIt++;
     	switch we.type {
-     		case "link" 	: '''WebElement link«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("a")»);''' 
-     		case "button" 	: '''WebElement button«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "field" 	: '''WebElement field«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "image" 	: '''WebElement image«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "div"	 	: '''WebElement div«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "checkbox"	: '''WebElement checkbox«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "combobox" : '''WebElement combobox«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
-     		case "title"	 : '''WebElement title«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»);''' 
+     		case "link" 	: '''WebElement link«variableIt» = «we.findWebElement»''' 
+     		case "button" 	: '''WebElement button«variableIt» «we.findWebElement»''' 
+     		case "field" 	: '''WebElement field«variableIt» = «we.findWebElement»''' 
+     		case "image" 	: '''WebElement image«variableIt» = «we.findWebElement»''' 
+     		case "div"	 	: '''WebElement div«variableIt» = «we.findWebElement»''' 
+     		case "checkbox"	: '''WebElement checkbox«variableIt» =«we.findWebElement»''' 
+     		case "combobox" : '''WebElement combobox«variableIt» = «we.findWebElement»''' 
+     		case "title"	 : '''WebElement title«variableIt» = driver.findElement(By.xpath("//title"));''' 
+   
+      		default : ""
+   		 }
+   	}
+   	
+   	 def findWebElement(WebElement we)
+    {	
+    	
+    	switch we.type {
+     		case "link" 	: '''driver.findElements(«we.selector.parseWebElementSelector("a")»).get(«we.index»)«we.attribute.parseAttribute»''' 
+     		case "button" 	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
+     		case "field" 	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
+     		case "image" 	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
+     		case "div"	 	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
+     		case "checkbox"	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
+     		case "combobox" : '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
+     		case "title"	 : '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
    
       		default : ""
    		 }
@@ -155,9 +180,8 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		{	
 			for(Attribute att: selector.getAttrs()){
 				switch att.getAttType{
-					//TODO map with right attribut for all
 					case "content" : return "By.xpath(\"//"+type+"[text()='"+att.value.getVal()+"']\")"
-					case "alt" : return "By.xpath(\"//"+type+"[alt()='"+att.value.getVal()+"']\")"
+					case "alt" : return "By.xpath(\"//"+type+"[@alt='"+att.value.getVal()+"']\")"
 					case "label" : return "By.xpath(\"//"+type+"[label()='"+att.value.getVal()+"']\")"
 					case "id" : return "By.xpath(\"//"+type+"[id()='"+att.value.getVal()+"']\")"
 					case "value" : return "By.xpath(\"//"+type+"[text()='"+att.value.getVal()+"']\")"
@@ -169,6 +193,13 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		}
 		else{
 			return "By.tagName(\""+type+"\")"
+		}
+   	}
+   	
+   	def parseAttribute(String attribute){
+   		switch attribute {
+			case "text" : return ".getText();"
+			default : ";"
 		}
    	}
 }

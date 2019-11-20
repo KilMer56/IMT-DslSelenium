@@ -11,4 +11,19 @@ TestSuite testok {
 		link(content:"Toutes les actualités").click()
 		link(content:"Accueil").exist() 
 	}
+	
+	TestCase case3 {
+		browser.goTo("http://www.imt-atlantique.fr/fr")
+		link(content:"Toutes les actualités").click()
+		image(alt:"Accueil").click()
+		link(content:"Toutes les actualités").exist() 
+	}
+	
+	
+		TestCase case7 {
+		browser.goTo("http://www.imt-atlantique.fr/fr")
+		myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[0].text
+		div(class:"actu_home_ctner_inner_cell1_titre")[0].click()
+		title().equals(myTitle)
+	}
 }

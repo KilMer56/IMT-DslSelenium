@@ -1,13 +1,7 @@
 TestSuite brokenTests {
 	
 	
-	
-	TestCase case3 {
-		browser.goTo("http://www.imt-atlantique.fr/fr")
-		link(label:"Toutes les actualités").click()
-		image(alt:"Accueil").click()
-		link(content:"Toutes les actualités").exist()
-	}
+
 	
 	TestCase case4 {
 		browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
@@ -36,16 +30,11 @@ TestSuite brokenTests {
 		div(content:"Aucun résultat ne correspond à votre recherche.").exist()
 	}
 	
-	TestCase case7 {
-		browser.goTo("http://www.imt-atlantique.fr/fr")
-		myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[1].content
-		div(class:"actu_home_ctner_inner_cell1_titre")[1].click()
-		title(content:myTitle).exist()
-	}
+
 	
 	TestCase case8 {
         browser.goTo("http://www.imt-atlantique.fr/fr")
-        myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[2].content
+        myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[2].text
         myUrl = div(class:"actu_home_ctner_inner_cell1_titre")[2].href
         browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
         field(id:"edit-rechercher").write(myTitle)

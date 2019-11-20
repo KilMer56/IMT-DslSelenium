@@ -31,7 +31,7 @@ Element:
 	GlobalElement | WebElement | VariableRef;
 
 WebElement:
-	type=WebElementType('('selector=Selector')')('['index=INT']')?('.'attribute=ID)?;//('.'actionCmd=ActionCommandType)?
+	type=WebElementType('('(selector=Selector)?')')('['index=INT']')?('.'attribute=AttributeType)?;//('.'actionCmd=ActionCommandType)?
 
 Selector:
 	property=PropertyType | Attributes;
@@ -54,8 +54,11 @@ GlobalElement:
 PropertyType:
 	"*" ;
 
+AttributeType:
+	"text" | "href";
+
 WebElementType: 
 	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox";
 	
 ActionCommandType:
-	"click" | "goTo" | "write" | "select" | "check" | "uncheck" | "parent" | "exist";
+	"click" | "goTo" | "write" | "select" | "check" | "uncheck" | "parent" | "exist" | "equals";
