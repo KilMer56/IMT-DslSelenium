@@ -16,6 +16,7 @@ import org.xtext.example.mydsl.seleniumDriver.*
  */
 class SeleniumDriverGenerator extends AbstractGenerator {
 
+	private static int variableIt = 0;
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		for (ts : resource.allContents.toIterable.filter(TestSuite)) {
 			fsa.generateFile(FirstUpperCase(ts.suiteName)+"Test" + ".java", ts.generateTestSuite)
@@ -44,11 +45,15 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		«FOR tc : ts.cases»
 		 	«tc.generateTestCaseBody»
 		«ENDFOR»
+		
+		
 	}
 	'''
 	
 
-	def generateTestCaseBody(TestCase tc) '''
+	def generateTestCaseBody(TestCase tc) {
+		variableIt = 0
+	return '''
 	private static void  «tc.caseName»() {
 		WebDriver driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -64,15 +69,16 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 				«line.parseLigne»
 			«ENDIF»
 		«ENDFOR»
+		driver.close();
 	}
-	'''
+	'''}
 	
 	def parseLigne(VariableAssignation line)'''
 		«line.value.type» «line.^var.name» = «line.value.createWebElement»;
 	'''
 	
 	def parseLigne(Action action) '''
-		«action.elem.parseElement».«action.command.parseCommand(action.param)»
+		«action.elem.parseElement»«action.command.parseCommand(action.param)»
 	'''
 	
 	def parseLigne(Check check) '''
@@ -86,19 +92,20 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		«ENDIF»
 	'''
 	
-	def parseElement(Element elem)'''
-		«IF elem instanceof WebElement»
-			«elem.createWebElement»;
-		«ENDIF»
-		«IF elem instanceof VariableRef»
-			«elem.ref.name»
-		«ENDIF»
-		«IF elem instanceof GlobalElement»
-			driver
-		«ENDIF»
-	'''
+	def parseElement(Element elem){
+		if( elem instanceof WebElement)
+			return '''«elem.createWebElement»;
+			
+			'''
+		if(elem instanceof VariableRef)
+			return ''' «elem.ref.name»;'''
+		if(elem instanceof GlobalElement)
+			return "driver."
+		
+}
 	
 	def parseCommand(String command,Parameter param){
+		//todo passer «elem.type»variableIt.
 	    switch command {	
       		case 'click'	: '''click();'''
       		case 'goTo' 	: '''get(«param.parseParameter»);''' 
@@ -125,15 +132,16 @@ class SeleniumDriverGenerator extends AbstractGenerator {
     }
     
     def createWebElement(WebElement we)
-    {	switch we.type {
-     		case "link" 	: ''' WebElement link = driver.findElement(«we.selector.parseWebElementSelector("a")»)''' 
-     		case "button" 	: ''' WebElement button = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
-     		case "field" 	: ''' WebElement field = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
-     		case "image" 	: ''' WebElement image = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
-     		case "div"	 	: ''' WebElement div = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
-     		case "checkbox"	: ''' WebElement checkbox = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
-     		case "combobox" : ''' WebElement combobox = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
-     		case "title"	 : ''' WebElement title = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+    {	variableIt++;
+    	switch we.type {
+     		case "link" 	: ''' WebElement link«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("a")»)''' 
+     		case "button" 	: ''' WebElement button«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "field" 	: ''' WebElement field«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "image" 	: ''' WebElement image«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "div"	 	: ''' WebElement div«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "checkbox"	: ''' WebElement checkbox«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "combobox" : ''' WebElement combobox«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
+     		case "title"	 : ''' WebElement title«variableIt» = driver.findElement(«we.selector.parseWebElementSelector("*")»)''' 
    
       		default : ""
    		 }
