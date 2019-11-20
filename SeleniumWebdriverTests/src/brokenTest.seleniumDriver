@@ -1,10 +1,6 @@
 TestSuite brokenTests {
 	
-	TestCase case2 {
-		browser.goTo("http://www.imt-atlantique.fr/fr")
-		link(content:"Toutes les actualités").click()
-		link(content:"Accueil").exist()
-	}
+	
 	
 	TestCase case3 {
 		browser.goTo("http://www.imt-atlantique.fr/fr")
