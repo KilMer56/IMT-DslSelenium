@@ -128,10 +128,10 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 	
 ''' 
       		case 'write' 	: '''«nomElem».write(«param.parseParameter»)''' 
-      		case 'select' 	: "It's some string."
-      		case 'check' 	: "It's some string."
-      		case 'uncheck' 	: "It's some string."
-      		case 'parent'  	: "It's some string."
+      		case 'select' 	: '''«nomElem».click()''' 
+      		case 'check' 	: '''if ( !«nomElem».isSelected() ){«nomElem».click()}''' 
+      		case 'uncheck' 	: '''if ( «nomElem».isSelected() ){«nomElem».click()})''' 
+      		case 'parent'  	: "TODO"
       		default : ""
    		 }
     }
@@ -168,7 +168,7 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
    		
 		if( selector instanceof Attributes) {	
 	   		if(elementType == "link"){
-	   			return "By.partialLinkText(new String("+selector.getAttrs().get(0).value+").toUpperCase())"
+	   			return "By.partialLinkText(new String(\""+parseAttributeValue(selector.getAttrs().get(0).value)+"\").toUpperCase())"
 	   		}
 	   		
 			for(Attribute att: selector.getAttrs()){
@@ -181,6 +181,8 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 			return "By.tagName(\""+type+"\")"
 		}
    	}
+   	
+
    	
    	def parseAttributeValue(AttributeValue attV){
    		if(attV.^val === null){
