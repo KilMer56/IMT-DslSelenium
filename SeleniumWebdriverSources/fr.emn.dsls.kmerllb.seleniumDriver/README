@@ -2,9 +2,8 @@
 Test1 : execution ok 
 Test2 : code compilable - ne parviens pas a trouver le lien Acceuil
 Test3 : execution ok
-Test4 : code compilable -erreur recherche champs edit-rechercher
-Test5 : code compilable
-Test6 : code compilable
-Test7 : code compilable
-Test8 : code compilable - erreur a la recherche du bouton
-
+Test4 : code compilable - erreur recherche champs edit-rechercher
+Test5 : code compilable - erreure recherche des CB
+Test6 : code compilable- erreur recherche par label
+Test7 : code compilable - dernier get ( title) ne retourne rien
+Test8 : code compilable - erreur a la recherche champs edit-rechercher
