@@ -31,7 +31,7 @@ TestSuite testok {
         browser.goTo("http://www.imt-atlantique.fr/fr")
         myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[2].text
         myUrl = div(class:"actu_home_ctner_inner_cell1_titre")[2].href
-        browser.goTo("http://www.imt-atlantique.fr/fr/echercher")
+        browser.goTo("http://www.imt-atlantique.fr/fr/rechercher") 
         field(id:"edit-rechercher").write(myTitle)
         button(value:"Appliquer les filtres").click()
         link(href:myUrl).exist()     

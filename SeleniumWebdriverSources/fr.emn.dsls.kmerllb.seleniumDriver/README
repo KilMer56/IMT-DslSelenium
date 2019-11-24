@@ -6,5 +6,5 @@ Test4 : code compilable -erreur recherche champs edit-rechercher
 Test5 : code compilable
 Test6 : code compilable
 Test7 : code compilable
-Test8 : code compilable
+Test8 : code compilable - erreur a la recherche du bouton
 

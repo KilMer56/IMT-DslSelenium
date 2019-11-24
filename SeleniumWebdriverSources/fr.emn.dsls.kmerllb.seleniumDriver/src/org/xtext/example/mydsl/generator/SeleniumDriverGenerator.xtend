@@ -172,6 +172,9 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 	   		}
 	   		
 			for(Attribute att: selector.getAttrs()){
+				if(att.getAttType.equals("class")){
+					return "By.className(\""+parseAttributeValue(att.value)+"\")"
+				}
 				return "By.xpath(\"//"+type+getHtmlAttributeType(att.getAttType)+parseAttributeValue(att.value)+"']\")";
 			}
 			

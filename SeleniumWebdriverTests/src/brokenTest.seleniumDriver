@@ -1,6 +1,5 @@
 TestSuite brokenTests {
 	
-	
 
 	
 	TestCase case4 {
@@ -8,7 +7,7 @@ TestSuite brokenTests {
 		field(id:"edit-rechercher").write("Donald Trump")
 		button(value:"Appliquer les filtres").click()
 		div(content:"Toutes les actualités").exist()
-	} 
+	}  
 	
 	TestCase case5 {
 		browser.goTo("http://www.imt-atlantique.fr/fr/formation/trouver-ma-formation")
