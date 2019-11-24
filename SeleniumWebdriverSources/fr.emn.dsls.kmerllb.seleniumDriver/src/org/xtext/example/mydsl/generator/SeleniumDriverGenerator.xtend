@@ -49,7 +49,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		
 		return '''
 		
-	private static void  «tc.caseName»() {
+	private static void «tc.caseName»() {
 		boolean cookiesAlreadyChecked = false;
 		WebDriver driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -74,6 +74,10 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	
 	def getWebElementAttributeType(WebElement we){
 		if(we.attribute !== null){
+			if(we.type === "title"){
+				return "String"
+			}
+			
 			switch(we.attribute){
 				case "text" : return "String"
 				default : return "WebElement"
@@ -109,13 +113,15 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		«IF elem instanceof WebElement»
 			«elem.createWebElement»
 			Assert.assertNotNull(«elem.type+variableIt»);
+			
 		«ENDIF»
 	'''
 	
 	def parseEquals(Element elem, Parameter param)'''
 		«IF elem instanceof WebElement»
 			«elem.createWebElement»
-			Assert.assertTrue(«elem.type+variableIt».getText().equals(«(param as VariableRef).ref.name»));
+			Assert.assertTrue(«elem.type+variableIt».contains(«(param as VariableRef).ref.name»));
+			
 		«ENDIF»
 	'''
 	
@@ -125,8 +131,8 @@ class SeleniumDriverGenerator extends AbstractGenerator {
       		case 'click'	: '''«nomElem».click();'''
       		case 'goTo' 	: '''.get(«param.parseParameter»);
 if(!cookiesAlreadyChecked) {
-		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click(); //ACCEPT COOKIE
-		cookiesAlreadyChecked = true;
+	new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click(); //ACCEPT COOKIE
+	cookiesAlreadyChecked = true;
 }
 
 ''' 
@@ -155,13 +161,13 @@ if(!cookiesAlreadyChecked) {
     	variableIt++;
     	
     	if(we.type == "title"){
-    		return "WebElement title"+variableIt+" = driver.findElement(By.xpath(\"//title\"));";
+    		return "String title"+variableIt+" = driver.getTitle()";
     	}
     	
     	return "WebElement "+we.type+variableIt+" = "+findWebElement(we);
    	}
    	
-   	 def findWebElement(WebElement we){	
+   	 def findWebElement(WebElement we){		
    		return "driver.findElements("+parseWebElementSelector(we.selector, we.type)+").get("+we.index+")"+parseAttribute(we.attribute);
    	}
    	
@@ -175,9 +181,14 @@ if(!cookiesAlreadyChecked) {
 	   		}
 	   		
 			for(Attribute att: selector.getAttrs()){
+				if(elementType == "link"){
+					return "By.partialLinkText(\""+parseAttributeValue(selector.getAttrs().get(0).value)+"\")"
+				}
+				
 				if(att.getAttType.equals("class")){
 					return "By.className(\""+parseAttributeValue(att.value)+"\")"
 				}
+				
 				return "By.xpath(\"//"+type+getHtmlAttributeType(att.getAttType)+parseAttributeValue(att.value)+"']\")";
 			}
 			
@@ -217,6 +228,7 @@ if(!cookiesAlreadyChecked) {
    			case "link": return "a"
    			case "field" : return "input"
    			case "button" : return "button"
+   			case "image" : return "img"
    			default: return "*"
    		}
    	}
