@@ -129,8 +129,8 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 ''' 
       		case 'write' 	: '''«nomElem».sendKeys(«param.parseParameter»);''' 
       		case 'select' 	: '''«nomElem».click();''' 
-      		case 'check' 	: '''if ( !«nomElem».isSelected() ){«nomElem».click()}''' 
-      		case 'uncheck' 	: '''if ( «nomElem».isSelected() ){«nomElem».click()})''' 
+      		case 'check' 	: '''if ( !«nomElem».isSelected() ){«nomElem».click();}''' 
+      		case 'uncheck' 	: '''if ( «nomElem».isSelected() ){«nomElem».click();}''' 
       		case 'parent'  	: "TODO"
       		default : ""
    		 }
