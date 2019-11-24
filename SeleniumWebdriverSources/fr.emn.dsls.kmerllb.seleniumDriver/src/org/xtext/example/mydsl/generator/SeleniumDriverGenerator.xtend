@@ -48,7 +48,9 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		variableIt = 0
 		
 		return '''
+		
 	private static void  «tc.caseName»() {
+		boolean cookiesAlreadyChecked = false;
 		WebDriver driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
@@ -122,10 +124,11 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	    switch command {	
       		case 'click'	: '''«nomElem».click();'''
       		case 'goTo' 	: '''.get(«param.parseParameter»);
-      		
-new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(
-	By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click();
-	
+if(!cookiesAlreadyChecked) {
+		new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click(); //ACCEPT COOKIE
+		cookiesAlreadyChecked = true;
+}
+
 ''' 
       		case 'write' 	: '''«nomElem».sendKeys(«param.parseParameter»);''' 
       		case 'select' 	: '''«nomElem».click();''' 
@@ -212,6 +215,8 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
    	def getWebElementHtmlType(String type){
    		switch type {
    			case "link": return "a"
+   			case "field" : return "input"
+   			case "button" : return "button"
    			default: return "*"
    		}
    	}
