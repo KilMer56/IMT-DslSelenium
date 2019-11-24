@@ -26,13 +26,13 @@ TestSuite testok {
 		div(class:"actu_home_ctner_inner_cell1_titre")[0].click()
 		title().equals(myTitle)
 	} 
-
+ 
 		TestCase case8 {
         browser.goTo("http://www.imt-atlantique.fr/fr")
         myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[2].text
         myUrl = div(class:"actu_home_ctner_inner_cell1_titre")[2].href
         browser.goTo("http://www.imt-atlantique.fr/fr/rechercher") 
-        field(id:"edit-rechercher").write(myTitle)
+        field(id:"edit-search-api-fulltext").write(myTitle)
         button(value:"Appliquer les filtres").click()
         link(href:myUrl).exist()     
           
