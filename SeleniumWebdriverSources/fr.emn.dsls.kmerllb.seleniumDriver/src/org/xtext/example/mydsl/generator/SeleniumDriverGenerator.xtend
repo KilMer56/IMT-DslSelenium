@@ -17,15 +17,12 @@ import org.xtext.example.mydsl.seleniumDriver.*
 class SeleniumDriverGenerator extends AbstractGenerator {
 
 	private static int variableIt = 0;
+	
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		for (ts : resource.allContents.toIterable.filter(TestSuite)) {
 			fsa.generateFile(FirstUpperCase(ts.suiteName)+"Test" + ".java", ts.generateTestSuite)
 		}
 	}
-	
-	def static String FirstUpperCase(String str) {
-    	return  str.substring(0, 1).toUpperCase() + str.substring(1);
-  	}
 	
 	def generateTestSuite(TestSuite ts) '''
 	import seleniumDriver.TestSuite;
@@ -38,20 +35,19 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 				«tc.caseName»();
 			«ENDFOR»
 						
-		} 
+		}
 		
 		«FOR tc : ts.cases»
 		 	«tc.generateTestCaseBody»
 		«ENDFOR»
 		
-		
 	}
 	'''
-	
 
 	def generateTestCaseBody(TestCase tc) {
 		variableIt = 0
-	return '''
+		
+		return '''
 	private static void  «tc.caseName»() {
 		WebDriver driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
@@ -64,13 +60,26 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 				«line.parseLigne»
 			«ENDIF»
 		«ENDFOR»
+		
 		driver.close();
 	}
-	'''}
-	
-	def parseLigne(VariableAssignation line)'''
-		String «line.^var.name» = «line.value.findWebElement»
 	'''
+	}
+	
+	def parseLigne(VariableAssignation line){
+		return getWebElementAttributeType(line.value)+" "+line.^var.name+" = "+findWebElement(line.value);
+	}
+	
+	def getWebElementAttributeType(WebElement we){
+		if(we.attribute !== null){
+			switch(we.attribute){
+				case "text" : return "String"
+				default : return ""
+			}
+		}
+		
+		return "ERROR";
+	}
 	
 	def parseLigne(Action action){ 
 		if( action.elem instanceof WebElement){
@@ -112,14 +121,12 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		
 	    switch command {	
       		case 'click'	: '''«nomElem».click();'''
-      		
       		case 'goTo' 	: '''.get(«param.parseParameter»);
       		
 new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(
 	By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click();
 	
 ''' 
-	
       		case 'write' 	: '''«nomElem».write(«param.parseParameter»)''' 
       		case 'select' 	: "It's some string."
       		case 'check' 	: "It's some string."
@@ -129,66 +136,45 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
    		 }
     }
     
-    def parseParameter(Parameter param)
-    {
-    	if( param instanceof WebElement)
-		{	return createWebElement(param)+"\n"}
+    def parseParameter(Parameter param){
+    	if(param instanceof WebElement){
+    		return createWebElement(param)+"\n";
+    	}
 
-		if( param instanceof VariableRef)
-		{	return param.getRef().getName();}
+		if(param instanceof VariableRef){
+			return param.getRef().getName();
+		}
 	
-		return ''' "«param.param»" ''' ;
-		
+		return param.param;
     }
     
-    def createWebElement(WebElement we)
-    {	variableIt++;
-    	switch we.type {
-     		case "link" 	: '''WebElement link«variableIt» = «we.findWebElement»''' 
-     		case "button" 	: '''WebElement button«variableIt» «we.findWebElement»''' 
-     		case "field" 	: '''WebElement field«variableIt» = «we.findWebElement»''' 
-     		case "image" 	: '''WebElement image«variableIt» = «we.findWebElement»''' 
-     		case "div"	 	: '''WebElement div«variableIt» = «we.findWebElement»''' 
-     		case "checkbox"	: '''WebElement checkbox«variableIt» =«we.findWebElement»''' 
-     		case "combobox" : '''WebElement combobox«variableIt» = «we.findWebElement»''' 
-     		case "title"	 : '''WebElement title«variableIt» = driver.findElement(By.xpath("//title"));''' 
-   
-      		default : ""
-   		 }
-   	}
-   	
-   	 def findWebElement(WebElement we)
-    {	
+    def createWebElement(WebElement we){
+    	variableIt++;
     	
-    	switch we.type {
-     		case "link" 	: '''driver.findElements(«we.selector.parseWebElementSelector("a")»).get(«we.index»)«we.attribute.parseAttribute»''' 
-     		case "button" 	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
-     		case "field" 	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
-     		case "image" 	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
-     		case "div"	 	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
-     		case "checkbox"	: '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
-     		case "combobox" : '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
-     		case "title"	 : '''driver.findElements(«we.selector.parseWebElementSelector("*")»).get(«we.index»)«we.attribute.parseAttribute»''' 
-   
-      		default : ""
-   		 }
+    	if(we.type == "title"){
+    		return "WebElement title«variableIt» = driver.findElement(By.xpath('//title'));";
+    	}
+    	
+    	return "WebElement "+we.type+variableIt+" = "+findWebElement(we);
    	}
    	
-   	def parseWebElementSelector(Selector selector,String type){
+   	 def findWebElement(WebElement we){	
+   		return "driver.findElements("+parseWebElementSelector(we.selector, we.type)+").get("+we.index+")"+parseAttribute(we.attribute);
+   	}
    	
-		if( selector instanceof Attributes)
-		{	
+   	def parseWebElementSelector(Selector selector, String elementType){
+   		
+   		var type = getWebElementHtmlType(elementType);
+   		
+		if( selector instanceof Attributes) {	
+	   		if(elementType == "link"){
+	   			return "By.partialLinkText(new String("+selector.getAttrs().get(0).value+").toUpperCase())"
+	   		}
+	   		
 			for(Attribute att: selector.getAttrs()){
-				switch att.getAttType{
-					case "content" : return "By.xpath(\"//"+type+"[text()='"+parseAttributeValue(att.value)+"']\")"
-					case "alt" : return "By.xpath(\"//"+type+"[@alt='"+parseAttributeValue(att.value)+"']\")"
-					case "label" : return "By.xpath(\"//"+type+"[label()='"+parseAttributeValue(att.value)+"']\")"
-					case "id" : return "By.xpath(\"//"+type+"[id()='"+parseAttributeValue(att.value)+"']\")"
-					case "value" : return "By.xpath(\"//"+type+"[text()='"+parseAttributeValue(att.value)+"']\")"
-					case "class" : return "By.xpath(\"//"+type+"[@class()='"+parseAttributeValue(att.value)+"']\")"
-					case "href" : return "By.xpath(\"//"+type+"[href()='"+parseAttributeValue(att.value)+"']\")"
-				}
+				return "By.xpath(\"//"+type+getHtmlAttributeType(att.getAttType)+parseAttributeValue(att.value)+"']\")";
 			}
+			
 			return "todo plusieurs attributs";
 		}
 		else{
@@ -198,17 +184,32 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
    	
    	def parseAttributeValue(AttributeValue attV){
    		if(attV.^val === null){
-   			   	return (attV as StringValue).ref;
-   			}
-   		
-   		
+		   	return (attV as StringValue).ref;
+		}
    		else{
    			return "\" + "+ attV.^val.ref.name +"+\" "
    		}
-   		
    	}
    	
- 
+   	def getHtmlAttributeType(String type){
+   		switch type {
+			case "content" : return "[text()='"
+			case "alt" : return "[@alt='"
+			case "label" : return "[label()='"
+			case "id" : return "[id()='"
+			case "value" : return "[text()='"
+			case "class" : return "[@class()='"
+			case "href" : return "[href()='"
+			default : ""
+		}
+   	}
+   	
+   	def getWebElementHtmlType(String type){
+   		switch type {
+   			case "link": return "a"
+   			default: return "*"
+   		}
+   	}
    	
    	def parseAttribute(String attribute){
    		switch attribute {
@@ -216,4 +217,8 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 			default : ";"
 		}
    	}
+	
+	def static String FirstUpperCase(String str) {
+    	return  str.substring(0, 1).toUpperCase() + str.substring(1);
+  	}
 }
