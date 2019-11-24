@@ -74,7 +74,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		if(we.attribute !== null){
 			switch(we.attribute){
 				case "text" : return "String"
-				default : return ""
+				default : return "WebElement"
 			}
 		}
 		
@@ -127,8 +127,8 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 	By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click();
 	
 ''' 
-      		case 'write' 	: '''«nomElem».write(«param.parseParameter»)''' 
-      		case 'select' 	: '''«nomElem».click()''' 
+      		case 'write' 	: '''«nomElem».sendKeys(«param.parseParameter»);''' 
+      		case 'select' 	: '''«nomElem».click();''' 
       		case 'check' 	: '''if ( !«nomElem».isSelected() ){«nomElem».click()}''' 
       		case 'uncheck' 	: '''if ( «nomElem».isSelected() ){«nomElem».click()})''' 
       		case 'parent'  	: "TODO"
@@ -145,14 +145,14 @@ new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocate
 			return param.getRef().getName();
 		}
 	
-		return param.param;
+		return "\""+param.param+"\"";
     }
     
     def createWebElement(WebElement we){
     	variableIt++;
     	
     	if(we.type == "title"){
-    		return "WebElement title«variableIt» = driver.findElement(By.xpath('//title'));";
+    		return "WebElement title"+variableIt+" = driver.findElement(By.xpath(\"//title\"));";
     	}
     	
     	return "WebElement "+we.type+variableIt+" = "+findWebElement(we);

@@ -4,7 +4,7 @@ TestSuite testok {
 		browser.goTo("http://www.imt-atlantique.fr/fr")
 		link(content:"Toutes les actualités").exist()
 	} 
-	
+	 
 	TestCase case2 {
 		
 		browser.goTo("http://www.imt-atlantique.fr/fr")
@@ -17,7 +17,7 @@ TestSuite testok {
 		link(content:"Toutes les actualités").click()
 	 	image(alt:"Accueil").click()
 		link(content:"Toutes les actualités").exist() 
-	} 
+	}
 	 
 	
 		TestCase case7 {
