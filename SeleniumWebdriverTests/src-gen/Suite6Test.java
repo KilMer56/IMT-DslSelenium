@@ -28,16 +28,18 @@ public class Suite6Test {
 			cookiesAlreadyChecked = true;
 		}
 		
-		WebElement field1 = driver.findElements(By.xpath("//input[label()='Rechercher']")).get(0);
+		WebElement field1 = driver.findElements(By.xpath("//input[@id='edit-search-api-fulltext']")).get(0);
 		field1.sendKeys("2007");
-		WebElement combobox2 = driver.findElements(By.xpath("//*[label()='Période de publication']")).get(0);
-		combobox2.click();
-		WebElement button3 = driver.findElements(By.xpath("//button[@value='Appliquer les filtres']")).get(0);
-		button3.click();
-		WebElement div4 = driver.findElements(By.xpath("//*[contains(text(),'Aucun résultat ne correspond à votre recherche.')]")).get(0);
-		Assert.assertNotNull(div4);
+		WebElement div2 = driver.findElements(By.xpath("//*[@id='recherche-date-range']")).get(0);
+		div2.click();
+		WebElement combobox3 = driver.findElements(By.xpath("//li[contains(text(),'Le mois dernier')]")).get(0);
+		combobox3.click();
+		WebElement field4 = driver.findElements(By.xpath("//input[@value='Appliquer les filtres']")).get(0);
+		field4.click();
+		WebElement div5 = driver.findElements(By.xpath("//*[contains(text(),'Aucun résultat ne correspond à votre recherche')]")).get(0);
+		Assert.assertNotNull(div5);
 		
-		
+		System.out.println("SUCESS !!!!!");
 		driver.close();
 	}
 	

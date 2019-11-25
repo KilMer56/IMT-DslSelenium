@@ -4,6 +4,6 @@ Test2 : ok
 Test3 : ok
 Test4 : ok
 Test5 : ok
-Test6 : code compilable- erreur recherche par label
+Test6 : ok
 Test7 : ok
-Test8 : code compilable - erreur a la recherche champs edit-rechercher
+Test8 : ok

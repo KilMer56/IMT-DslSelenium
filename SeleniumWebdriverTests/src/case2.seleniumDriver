@@ -4,4 +4,4 @@ TestSuite suite2 {
 	 	link(content:"TOUTES LES ACTUALITÉS").click()
 		link(content:"Accueil").exist() 
 	}
-}
+}  

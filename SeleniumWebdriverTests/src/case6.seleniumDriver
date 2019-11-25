@@ -1,9 +1,10 @@
 TestSuite suite6{
 	TestCase case6 {
 		browser.goTo("http://www.imt-atlantique.fr/fr/rechercher")
-		field(label:"Rechercher").write("2007")
-		combobox(label:"Période de publication").select("Le mois dernier")
-		button(value:"Appliquer les filtres").click()
-		div(content:"Aucun résultat ne correspond à votre recherche.").exist()
+		field(id:"edit-search-api-fulltext").write("2007")
+		div(id:"recherche-date-range").click()
+		combobox(content:"Le mois dernier").click()
+		field(value:"Appliquer les filtres").click()
+		div(content:"Aucun résultat ne correspond à votre recherche").exist()
 	}
 }

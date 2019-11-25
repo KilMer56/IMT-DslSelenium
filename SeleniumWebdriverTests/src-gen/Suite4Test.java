@@ -35,7 +35,7 @@ public class Suite4Test {
 		WebElement div3 = driver.findElements(By.xpath("//*[contains(text(),'Aucun résultat ne correspond à votre recherche')]")).get(0);
 		Assert.assertNotNull(div3);
 		
-		
+		System.out.println("SUCESS !!!!!");
 		driver.close();
 	}
 	

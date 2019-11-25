@@ -70,7 +70,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 				«line.parseLigne»
 			«ENDIF»
 		«ENDFOR»
-		
+		System.out.println("SUCCESS !!!!!");
 		driver.close();
 	}
 	'''
@@ -86,8 +86,10 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 				return "String"
 			}
 			
+			
 			switch(we.attribute){
 				case "text" : return "String"
+				case "href" : return "String"
 				default : return "WebElement"
 			}
 		}
@@ -179,11 +181,12 @@ if(!cookiesAlreadyChecked) {
     		return 
 			"List<WebElement> checkbox"+variableIt+" = driver.findElements(By.xpath(\"//input[@type='checkbox']\"));"
     	}
-    	
+    
     	return "WebElement "+we.type+variableIt+" = "+findWebElement(we);
    	}
    	
-   	 def findWebElement(WebElement we){		
+   	 def findWebElement(WebElement we){	
+   	 		
    		return "driver.findElements("+parseWebElementSelector(we.selector, we.type)+").get("+we.index+")"+parseAttribute(we.attribute);
    	}
    	
@@ -194,16 +197,20 @@ if(!cookiesAlreadyChecked) {
 		if( selector instanceof Attributes) {	
 	   	   		
 			for(Attribute att: selector.getAttrs()){
-				if(elementType == "link"){
-					return "By.partialLinkText(\""+parseAttributeValue(selector.getAttrs().get(0).value)+"\")"
+				if(elementType == "link" && att.getAttType != "href"){
+					return "By.partialLinkText(\""+parseAttributeValue(att.value)+"\")"
 				}
-				
+				if(elementType == "parentLink"){
+					return "By.xpath(\"//*"+getHtmlAttributeType(att.getAttType)+parseAttributeValue(att.value)+"']/parent::a\")"
+				}
+
 				if(att.getAttType.equals("class")){
 					return "By.className(\""+parseAttributeValue(att.value)+"\")"
 				}
 				if(att.getAttType.equals("content")){
 					return "By.xpath(\"//"+type+getHtmlAttributeType(att.getAttType)+parseAttributeValue(att.value)+"')]\")";
 				}
+				
 				
 				
 				return "By.xpath(\"//"+type+getHtmlAttributeType(att.getAttType)+parseAttributeValue(att.value)+"']\")";
@@ -223,7 +230,7 @@ if(!cookiesAlreadyChecked) {
 		   	return (attV as StringValue).ref;
 		}
    		else{
-   			return "\" + "+ attV.^val.ref.name +"+\" "
+   			return "\" + "+ attV.^val.ref.name +"+\""
    		}
    	}
    	
@@ -234,8 +241,8 @@ if(!cookiesAlreadyChecked) {
 			case "label" : return "[text()='"
 			case "id" : return "[@id='"
 			case "value" : return "[@value='"
-			case "class" : return "[@class()='"
-			case "href" : return "[href()='"
+			case "class" : return "[@class='"
+			case "href" : return "[@href='"
 			default : ""
 		}
    	}
@@ -246,6 +253,7 @@ if(!cookiesAlreadyChecked) {
    			case "field" : return "input"
    			case "button" : return "button"
    			case "image" : return "img"
+   			case "combobox" : return "li"
    			default: return "*"
    		}
    	}
@@ -253,6 +261,7 @@ if(!cookiesAlreadyChecked) {
    	def parseAttribute(String attribute){
    		switch attribute {
 			case "text" : return ".getText();"
+			case "href" : return ".getAttribute(\"pathname\");"
 			default : ";"
 		}
    	}

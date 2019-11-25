@@ -33,7 +33,7 @@ public class Suite2Test {
 		WebElement link2 = driver.findElements(By.partialLinkText("Accueil")).get(0);
 		Assert.assertNotNull(link2);
 		
-		
+		System.out.println("SUCESS !!!!!");
 		driver.close();
 	}
 	

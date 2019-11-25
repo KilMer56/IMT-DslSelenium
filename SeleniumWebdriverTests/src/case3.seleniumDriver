@@ -5,4 +5,4 @@ TestSuite suite3 {
 	 	image(alt:"Accueil").click()
 		link(content:"TOUTES LES ACTUALITÉS").exist() 
 	}
-}
+} 

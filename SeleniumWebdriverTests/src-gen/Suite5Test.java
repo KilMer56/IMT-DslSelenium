@@ -29,10 +29,9 @@ public class Suite5Test {
 		}
 		
 		List<WebElement> checkbox1 = driver.findElements(By.xpath("//input[@type='checkbox']"));
-		for(WebElement checkBox:checkbox1)
-		        	{
-		           		 if(checkBox.isSelected()) checkBox.click(); 
-		        	}
+		for(WebElement checkBox:checkbox1){
+		if(checkBox.isSelected()) checkBox.click(); 
+		}
 		WebElement checkbox2 = driver.findElements(By.xpath("//*[text()='Anglais']")).get(0);
 		if ( !checkbox2.isSelected() ){checkbox2.click();}
 		WebElement checkbox3 = driver.findElements(By.xpath("//*[text()='A domicile']")).get(0);
@@ -44,7 +43,7 @@ public class Suite5Test {
 		WebElement div6 = driver.findElements(By.xpath("//*[contains(text(),'No found course matching your criteria.')]")).get(0);
 		Assert.assertNotNull(div6);
 		
-		
+		System.out.println("SUCESS !!!!!");
 		driver.close();
 	}
 	

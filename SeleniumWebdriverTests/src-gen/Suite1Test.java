@@ -31,7 +31,7 @@ public class Suite1Test {
 		WebElement link1 = driver.findElements(By.partialLinkText("TOUTES LES ACTUALITÉS")).get(0);
 		Assert.assertNotNull(link1);
 		
-		
+		System.out.println("SUCESS !!!!!");
 		driver.close();
 	}
 	
