@@ -61,7 +61,7 @@ AttributeType:
 	"text" | "href" | "content" | "alt" | "label" | "id" | "value" |"class";
 
 WebElementType: 
-	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox";
+	"link" | "button" | "field" | "image" | "div" | "checkbox" | "title" | "combobox"| "parentLink";
 	
 ActionCommandType:
 	"click" | "goTo" | "write" | "select" | "check" | "uncheck" | "parent" | "exist" | "equals";
