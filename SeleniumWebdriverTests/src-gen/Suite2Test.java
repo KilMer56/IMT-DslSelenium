@@ -1,6 +1,14 @@
-import seleniumDriver.TestSuite;
-
-public class suite2Test {
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+	
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+	
+import org.junit.Assert;  
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+	
+public class Suite2Test {
 
 	public static void main(String[] args) { 
 		System.setProperty("webdriver.gecko.driver", "geckodriver");
@@ -20,9 +28,9 @@ public class suite2Test {
 			cookiesAlreadyChecked = true;
 		}
 		
-		WebElement link1 = driver.findElements(By.partialLinkText(new String("TOUTES LES ACTUALIT�S").toUpperCase())).get(0);
+		WebElement link1 = driver.findElements(By.partialLinkText("TOUTES LES ACTUALITÉS")).get(0);
 		link1.click();
-		WebElement link2 = driver.findElements(By.partialLinkText(new String("Accueil").toUpperCase())).get(0);
+		WebElement link2 = driver.findElements(By.partialLinkText("Accueil")).get(0);
 		Assert.assertNotNull(link2);
 		
 		

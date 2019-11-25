@@ -35,19 +35,19 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	import org.openqa.selenium.*;
 	import org.openqa.selenium.firefox.FirefoxDriver;
 	
-	public class «ts.suiteName.FirstUpperCase»Test {
+	public class ï¿½ts.suiteName.FirstUpperCaseï¿½Test {
 	
 		public static void main(String[] args) { 
 			System.setProperty("webdriver.gecko.driver", "geckodriver");
-			«FOR tc : ts.cases»
-				«tc.caseName»();
-			«ENDFOR»
+			ï¿½FOR tc : ts.casesï¿½
+				ï¿½tc.caseNameï¿½();
+			ï¿½ENDFORï¿½
 						
 		}
 		
-		«FOR tc : ts.cases»
-		 	«tc.generateTestCaseBody»
-		«ENDFOR»
+		ï¿½FOR tc : ts.casesï¿½
+		 	ï¿½tc.generateTestCaseBodyï¿½
+		ï¿½ENDFORï¿½
 		
 	}
 	'''
@@ -57,19 +57,19 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		
 		return '''
 		
-	private static void «tc.caseName»() {
+	private static void ï¿½tc.caseNameï¿½() {
 		boolean cookiesAlreadyChecked = false;
 		WebDriver driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
-		«FOR line : tc.lines»
-			«IF line instanceof Action»
-				«line.parseLigne»
-			«ENDIF»
-			«IF line instanceof VariableAssignation»
-				«line.parseLigne»
-			«ENDIF»
-		«ENDFOR»
+		ï¿½FOR line : tc.linesï¿½
+			ï¿½IF line instanceof Actionï¿½
+				ï¿½line.parseLigneï¿½
+			ï¿½ENDIFï¿½
+			ï¿½IF line instanceof VariableAssignationï¿½
+				ï¿½line.parseLigneï¿½
+			ï¿½ENDIFï¿½
+		ï¿½ENDFORï¿½
 		
 		driver.close();
 	}
@@ -118,36 +118,36 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	
 	
 	def parseExist(Element elem)'''
-		«IF elem instanceof WebElement»
-			«elem.createWebElement»
-			Assert.assertNotNull(«elem.type+variableIt»);
+		ï¿½IF elem instanceof WebElementï¿½
+			ï¿½elem.createWebElementï¿½
+			Assert.assertNotNull(ï¿½elem.type+variableItï¿½);
 			
-		«ENDIF»
+		ï¿½ENDIFï¿½
 	'''
 	
 	def parseEquals(Element elem, Parameter param)'''
-		«IF elem instanceof WebElement»
-			«elem.createWebElement»
-			Assert.assertTrue(«elem.type+variableIt».contains(«(param as VariableRef).ref.name»));
+		ï¿½IF elem instanceof WebElementï¿½
+			ï¿½elem.createWebElementï¿½
+			Assert.assertTrue(ï¿½elem.type+variableItï¿½.contains(ï¿½(param as VariableRef).ref.nameï¿½));
 			
-		«ENDIF»
+		ï¿½ENDIFï¿½
 	'''
 	
 	def parseCommand(String command,Parameter param,String nomElem){
 		
 	    switch command {	
-      		case 'click'	: '''«nomElem».click();'''
-      		case 'goTo' 	: '''.get(«param.parseParameter»);
+      		case 'click'	: '''ï¿½nomElemï¿½.click();'''
+      		case 'goTo' 	: '''.get(ï¿½param.parseParameterï¿½);
 if(!cookiesAlreadyChecked) {
 	new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click(); //ACCEPT COOKIE
 	cookiesAlreadyChecked = true;
 }
 
 ''' 
-      		case 'write' 	: '''«nomElem».sendKeys(«param.parseParameter»);''' 
-      		case 'select' 	: '''«nomElem».click();''' 
-      		case 'check' 	: '''if ( !«nomElem».isSelected() ){«nomElem».click();}''' 
-      		case 'uncheck' 	: '''if ( «nomElem».isSelected() ){«nomElem».click();}''' 
+      		case 'write' 	: '''ï¿½nomElemï¿½.sendKeys(ï¿½param.parseParameterï¿½);''' 
+      		case 'select' 	: '''ï¿½nomElemï¿½.click();''' 
+      		case 'check' 	: '''if ( !ï¿½nomElemï¿½.isSelected() ){ï¿½nomElemï¿½.click();}''' 
+      		case 'uncheck' 	: '''if ( ï¿½nomElemï¿½.isSelected() ){ï¿½nomElemï¿½.click();}''' 
       		case 'parent'  	: "TODO"
       		default : ""
    		 }
@@ -169,7 +169,7 @@ if(!cookiesAlreadyChecked) {
     	variableIt++;
     	
     	if(we.type == "title"){
-    		return "String title"+variableIt+" = driver.getTitle()";
+    		return "String title"+variableIt+" = driver.getTitle();";
     	}
     	
     	return "WebElement "+we.type+variableIt+" = "+findWebElement(we);
@@ -184,10 +184,7 @@ if(!cookiesAlreadyChecked) {
    		var type = getWebElementHtmlType(elementType);
    		
 		if( selector instanceof Attributes) {	
-	   		if(elementType == "link"){
-	   			return "By.partialLinkText(new String(\""+parseAttributeValue(selector.getAttrs().get(0).value)+"\").toUpperCase())"
-	   		}
-	   		
+	   	   		
 			for(Attribute att: selector.getAttrs()){
 				if(elementType == "link"){
 					return "By.partialLinkText(\""+parseAttributeValue(selector.getAttrs().get(0).value)+"\")"
