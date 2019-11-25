@@ -1,0 +1,8 @@
+TestSuite suite3 {
+	TestCase case3 { 
+		browser.goTo("http://www.imt-atlantique.fr/fr")
+		link(content:"TOUTES LES ACTUALIT�S").click()
+	 	image(alt:"Accueil").click()
+		link(content:"TOUTES LES ACTUALIT�S").exist() 
+	}
+}

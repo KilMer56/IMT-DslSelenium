@@ -1,0 +1,13 @@
+TestSuite suite5 {
+	TestCase case5 {
+		browser.goTo("http://www.imt-atlantique.fr/fr/formation/trouver-ma-formation")
+		checkbox(*).uncheck()
+		//checkbox(label:"Anglais"|"A domicile"|"Temps plein").check()
+		checkbox(label:"Anglais").check()
+		checkbox(label:"A domicile").check()
+		checkbox(label:"Temps plein").check() 
+		button(value:"Appliquer les critéres").click()
+		div(content:"No found course matching your criteria.").exist()
+	 
+	} 
+}
