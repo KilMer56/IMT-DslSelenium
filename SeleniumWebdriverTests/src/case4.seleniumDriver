@@ -4,5 +4,5 @@ TestSuite suite4 {
 		field(id:"edit-rechercher").write("Donald Trump")
 		button(value:"Appliquer les filtres").click()
 		div(content:"Toutes les actualités").exist()
-	}  
+	}   
 }

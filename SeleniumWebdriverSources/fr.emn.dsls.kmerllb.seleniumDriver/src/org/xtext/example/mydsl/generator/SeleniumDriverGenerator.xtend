@@ -169,7 +169,7 @@ if(!cookiesAlreadyChecked) {
     	variableIt++;
     	
     	if(we.type == "title"){
-    		return "String title"+variableIt+" = driver.getTitle()";
+    		return "String title"+variableIt+" = driver.getTitle();";
     	}
     	
     	return "WebElement "+we.type+variableIt+" = "+findWebElement(we);
@@ -184,10 +184,7 @@ if(!cookiesAlreadyChecked) {
    		var type = getWebElementHtmlType(elementType);
    		
 		if( selector instanceof Attributes) {	
-	   		if(elementType == "link"){
-	   			return "By.partialLinkText(new String(\""+parseAttributeValue(selector.getAttrs().get(0).value)+"\").toUpperCase())"
-	   		}
-	   		
+	   	   		
 			for(Attribute att: selector.getAttrs()){
 				if(elementType == "link"){
 					return "By.partialLinkText(\""+parseAttributeValue(selector.getAttrs().get(0).value)+"\")"
