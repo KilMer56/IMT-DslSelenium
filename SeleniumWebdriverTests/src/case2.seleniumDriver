@@ -2,7 +2,7 @@ TestSuite suite2 {
 	 
 	TestCase case2 {
 		browser.goTo("http://www.imt-atlantique.fr/fr")
-	 	link(content:"TOUTES LES ACTUALIT�S").click()
+	 	link(content:"TOUTES LES ACTUALITÉS").click()
 		link(content:"Accueil").exist() 
 	
 	}

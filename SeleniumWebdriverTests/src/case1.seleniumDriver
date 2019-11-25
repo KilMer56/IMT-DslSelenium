@@ -2,6 +2,6 @@ TestSuite suite1 {
 	TestCase case1 {	
 		//browser.open()
 		browser.goTo("http://www.imt-atlantique.fr/fr")
-		link(content:"TOUTES LES ACTUALIT�S").exist()
+		link(content:"TOUTES LES ACTUALITÉS").exist()
 	} 
 }

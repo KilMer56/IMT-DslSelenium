@@ -20,11 +20,11 @@ public class suite3Test {
 			cookiesAlreadyChecked = true;
 		}
 		
-		WebElement link1 = driver.findElements(By.partialLinkText(new String("TOUTES LES ACTUALIT�S").toUpperCase())).get(0);
+		WebElement link1 = driver.findElements(By.partialLinkText(new String("TOUTES LES ACTUALITÉS").toUpperCase())).get(0);
 		link1.click();
 		WebElement image2 = driver.findElements(By.xpath("//img[@alt='Accueil']")).get(0);
 		image2.click();
-		WebElement link3 = driver.findElements(By.partialLinkText(new String("TOUTES LES ACTUALIT�S").toUpperCase())).get(0);
+		WebElement link3 = driver.findElements(By.partialLinkText(new String("TOUTES LES ACTUALITÉS").toUpperCase())).get(0);
 		Assert.assertNotNull(link3);
 		
 		
