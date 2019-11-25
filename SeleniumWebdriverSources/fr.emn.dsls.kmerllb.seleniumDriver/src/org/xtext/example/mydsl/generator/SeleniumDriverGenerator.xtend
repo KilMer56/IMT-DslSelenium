@@ -25,9 +25,17 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	}
 	
 	def generateTestSuite(TestSuite ts) '''
-	import seleniumDriver.TestSuite;
-	
-	public class «ts.suiteName»Test {
+	import java.util.List;
+	import java.util.concurrent.TimeUnit;
+		
+	import org.openqa.selenium.support.ui.ExpectedConditions;
+	import org.openqa.selenium.support.ui.WebDriverWait;
+		
+	import org.junit.Assert;  
+	import org.openqa.selenium.*;
+	import org.openqa.selenium.firefox.FirefoxDriver;
+		
+	public class «ts.suiteName.FirstUpperCase»Test {
 	
 		public static void main(String[] args) { 
 			System.setProperty("webdriver.gecko.driver", "geckodriver");
