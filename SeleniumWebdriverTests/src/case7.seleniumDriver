@@ -4,5 +4,5 @@ TestSuite suite7 {
 		myTitle = div(class:"actu_home_ctner_inner_cell1_titre")[0].text
 		div(class:"actu_home_ctner_inner_cell1_titre")[0].click()
 		title().equals(myTitle)
-	} 
-}
+	}
+} 

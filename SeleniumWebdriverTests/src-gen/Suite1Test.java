@@ -28,7 +28,7 @@ public class Suite1Test {
 			cookiesAlreadyChecked = true;
 		}
 		
-		WebElement link1 = driver.findElements(By.partialLinkText(new String("TOUTES LES ACTUALITÉS").toUpperCase())).get(0);
+		WebElement link1 = driver.findElements(By.partialLinkText("TOUTES LES ACTUALITÉS")).get(0);
 		Assert.assertNotNull(link1);
 		
 		

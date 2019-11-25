@@ -1,6 +1,14 @@
-import seleniumDriver.TestSuite;
-
-public class suite8Test {
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+	
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+	
+import org.junit.Assert;  
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+	
+public class Suite8Test {
 
 	public static void main(String[] args) { 
 		System.setProperty("webdriver.gecko.driver", "geckodriver");
@@ -28,11 +36,11 @@ public class suite8Test {
 			cookiesAlreadyChecked = true;
 		}
 		
-		WebElement field1 = driver.findElements(By.xpath("//input[id()='edit-search-api-fulltext']")).get(0);
+		WebElement field1 = driver.findElements(By.xpath("//input[@id='edit-search-api-fulltext']")).get(0);
 		field1.sendKeys(myTitle);
-		WebElement button2 = driver.findElements(By.xpath("//button[text()='Appliquer les filtres']")).get(0);
+		WebElement button2 = driver.findElements(By.xpath("//button[@value='Appliquer les filtres']")).get(0);
 		button2.click();
-		WebElement link3 = driver.findElements(By.partialLinkText(new String("" + myUrl+" ").toUpperCase())).get(0);
+		WebElement link3 = driver.findElements(By.partialLinkText("" + myUrl+" ")).get(0);
 		Assert.assertNotNull(link3);
 		
 		

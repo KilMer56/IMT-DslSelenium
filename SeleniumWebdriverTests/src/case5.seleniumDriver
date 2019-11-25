@@ -6,8 +6,8 @@ TestSuite suite5 {
 		checkbox(label:"Anglais").check()
 		checkbox(label:"A domicile").check()
 		checkbox(label:"Temps plein").check() 
-		button(value:"Appliquer les critéres").click()
+		field(value:"Appliquer les critères").click()
 		div(content:"No found course matching your criteria.").exist()
 	 
-	} 
-}
+	}  
+} 

@@ -1,6 +1,14 @@
-import seleniumDriver.TestSuite;
-
-public class suite6Test {
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+	
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+	
+import org.junit.Assert;  
+import org.openqa.selenium.*;
+import org.openqa.selenium.firefox.FirefoxDriver;
+	
+public class Suite6Test {
 
 	public static void main(String[] args) { 
 		System.setProperty("webdriver.gecko.driver", "geckodriver");
@@ -24,9 +32,9 @@ public class suite6Test {
 		field1.sendKeys("2007");
 		WebElement combobox2 = driver.findElements(By.xpath("//*[label()='Période de publication']")).get(0);
 		combobox2.click();
-		WebElement button3 = driver.findElements(By.xpath("//button[text()='Appliquer les filtres']")).get(0);
+		WebElement button3 = driver.findElements(By.xpath("//button[@value='Appliquer les filtres']")).get(0);
 		button3.click();
-		WebElement div4 = driver.findElements(By.xpath("//*[text()='Aucun résultat ne correspond à votre recherche.']")).get(0);
+		WebElement div4 = driver.findElements(By.xpath("//*[contains(text(),'Aucun résultat ne correspond à votre recherche.')]")).get(0);
 		Assert.assertNotNull(div4);
 		
 		

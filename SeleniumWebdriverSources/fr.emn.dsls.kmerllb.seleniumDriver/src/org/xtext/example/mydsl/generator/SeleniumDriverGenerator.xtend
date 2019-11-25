@@ -148,10 +148,9 @@ if(!cookiesAlreadyChecked) {
       		case 'select' 	: '''«nomElem».click();''' 
       		case 'check' 	: '''if ( !«nomElem».isSelected() ){«nomElem».click();}''' 
       		case 'uncheck' 	: '''
-			for(WebElement checkBox:«nomElem»)
-        	{
-           		 if(checkBox.isSelected()) checkBox.click(); 
-        	}
+			for(WebElement checkBox:«nomElem»){
+			if(checkBox.isSelected()) checkBox.click(); 
+			}
         	''' 
       		case 'parent'  	: "TODO"
       		default : ""

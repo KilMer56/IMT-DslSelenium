@@ -28,17 +28,20 @@ public class Suite5Test {
 			cookiesAlreadyChecked = true;
 		}
 		
-		WebElement checkbox1 = driver.findElements(By.tagName("*")).get(0);
-		if ( checkbox1.isSelected() ){checkbox1.click();}
-		WebElement checkbox2 = driver.findElements(By.xpath("//*[label()='Anglais']")).get(0);
+		List<WebElement> checkbox1 = driver.findElements(By.xpath("//input[@type='checkbox']"));
+		for(WebElement checkBox:checkbox1)
+		        	{
+		           		 if(checkBox.isSelected()) checkBox.click(); 
+		        	}
+		WebElement checkbox2 = driver.findElements(By.xpath("//*[text()='Anglais']")).get(0);
 		if ( !checkbox2.isSelected() ){checkbox2.click();}
-		WebElement checkbox3 = driver.findElements(By.xpath("//*[label()='A domicile']")).get(0);
+		WebElement checkbox3 = driver.findElements(By.xpath("//*[text()='A domicile']")).get(0);
 		if ( !checkbox3.isSelected() ){checkbox3.click();}
-		WebElement checkbox4 = driver.findElements(By.xpath("//*[label()='Temps plein']")).get(0);
+		WebElement checkbox4 = driver.findElements(By.xpath("//*[text()='Temps plein']")).get(0);
 		if ( !checkbox4.isSelected() ){checkbox4.click();}
-		WebElement button5 = driver.findElements(By.xpath("//button[text()='Appliquer les critéres']")).get(0);
-		button5.click();
-		WebElement div6 = driver.findElements(By.xpath("//*[text()='No found course matching your criteria.']")).get(0);
+		WebElement field5 = driver.findElements(By.xpath("//input[@value='Appliquer les critères']")).get(0);
+		field5.click();
+		WebElement div6 = driver.findElements(By.xpath("//*[contains(text(),'No found course matching your criteria.')]")).get(0);
 		Assert.assertNotNull(div6);
 		
 		

@@ -28,11 +28,11 @@ public class Suite4Test {
 			cookiesAlreadyChecked = true;
 		}
 		
-		WebElement field1 = driver.findElements(By.xpath("//input[id()='edit-rechercher']")).get(0);
+		WebElement field1 = driver.findElements(By.xpath("//input[@id='edit-search-api-fulltext']")).get(0);
 		field1.sendKeys("Donald Trump");
-		WebElement button2 = driver.findElements(By.xpath("//button[text()='Appliquer les filtres']")).get(0);
-		button2.click();
-		WebElement div3 = driver.findElements(By.xpath("//*[text()='Toutes les actualités']")).get(0);
+		WebElement field2 = driver.findElements(By.xpath("//input[@value='Appliquer les filtres']")).get(0);
+		field2.click();
+		WebElement div3 = driver.findElements(By.xpath("//*[contains(text(),'Aucun résultat ne correspond à votre recherche')]")).get(0);
 		Assert.assertNotNull(div3);
 		
 		

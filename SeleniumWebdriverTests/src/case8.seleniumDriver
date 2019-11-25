@@ -9,4 +9,4 @@ TestSuite suite8 {
         link(href:myUrl).exist()     
           
     }
-}
+} 
