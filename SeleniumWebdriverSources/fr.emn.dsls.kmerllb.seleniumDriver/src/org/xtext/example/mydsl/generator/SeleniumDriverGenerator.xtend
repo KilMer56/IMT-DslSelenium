@@ -30,7 +30,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	public class «ts.suiteName»Test {
 	
 		public static void main(String[] args) { 
-			
+			System.setProperty("webdriver.gecko.driver", "geckodriver");
 			«FOR tc : ts.cases»
 				«tc.caseName»();
 			«ENDFOR»
@@ -51,7 +51,7 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		
 	private static void «tc.caseName»() {
 		boolean cookiesAlreadyChecked = false;
-		WebDriver driver = new ChromeDriver();
+		WebDriver driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
 		«FOR line : tc.lines»
