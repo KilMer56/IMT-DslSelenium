@@ -27,27 +27,27 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	def generateTestSuite(TestSuite ts) '''
 	import java.util.List;
 	import java.util.concurrent.TimeUnit;
-	
+		
 	import org.openqa.selenium.support.ui.ExpectedConditions;
 	import org.openqa.selenium.support.ui.WebDriverWait;
-	
+		
 	import org.junit.Assert;  
 	import org.openqa.selenium.*;
 	import org.openqa.selenium.firefox.FirefoxDriver;
-	
-	public class ï¿½ts.suiteName.FirstUpperCaseï¿½Test {
+		
+	public class «ts.suiteName.FirstUpperCase»Test {
 	
 		public static void main(String[] args) { 
 			System.setProperty("webdriver.gecko.driver", "geckodriver");
-			ï¿½FOR tc : ts.casesï¿½
-				ï¿½tc.caseNameï¿½();
-			ï¿½ENDFORï¿½
+			«FOR tc : ts.cases»
+				«tc.caseName»();
+			«ENDFOR»
 						
 		}
 		
-		ï¿½FOR tc : ts.casesï¿½
-		 	ï¿½tc.generateTestCaseBodyï¿½
-		ï¿½ENDFORï¿½
+		«FOR tc : ts.cases»
+		 	«tc.generateTestCaseBody»
+		«ENDFOR»
 		
 	}
 	'''
@@ -57,19 +57,19 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 		
 		return '''
 		
-	private static void ï¿½tc.caseNameï¿½() {
+	private static void «tc.caseName»() {
 		boolean cookiesAlreadyChecked = false;
 		WebDriver driver = new FirefoxDriver();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		
-		ï¿½FOR line : tc.linesï¿½
-			ï¿½IF line instanceof Actionï¿½
-				ï¿½line.parseLigneï¿½
-			ï¿½ENDIFï¿½
-			ï¿½IF line instanceof VariableAssignationï¿½
-				ï¿½line.parseLigneï¿½
-			ï¿½ENDIFï¿½
-		ï¿½ENDFORï¿½
+		«FOR line : tc.lines»
+			«IF line instanceof Action»
+				«line.parseLigne»
+			«ENDIF»
+			«IF line instanceof VariableAssignation»
+				«line.parseLigne»
+			«ENDIF»
+		«ENDFOR»
 		
 		driver.close();
 	}
@@ -118,36 +118,41 @@ class SeleniumDriverGenerator extends AbstractGenerator {
 	
 	
 	def parseExist(Element elem)'''
-		ï¿½IF elem instanceof WebElementï¿½
-			ï¿½elem.createWebElementï¿½
-			Assert.assertNotNull(ï¿½elem.type+variableItï¿½);
+		«IF elem instanceof WebElement»
+			«elem.createWebElement»
+			Assert.assertNotNull(«elem.type+variableIt»);
 			
-		ï¿½ENDIFï¿½
+		«ENDIF»
 	'''
 	
 	def parseEquals(Element elem, Parameter param)'''
-		ï¿½IF elem instanceof WebElementï¿½
-			ï¿½elem.createWebElementï¿½
-			Assert.assertTrue(ï¿½elem.type+variableItï¿½.contains(ï¿½(param as VariableRef).ref.nameï¿½));
+		«IF elem instanceof WebElement»
+			«elem.createWebElement»
+			Assert.assertTrue(«elem.type+variableIt».contains(«(param as VariableRef).ref.name»));
 			
-		ï¿½ENDIFï¿½
+		«ENDIF»
 	'''
 	
 	def parseCommand(String command,Parameter param,String nomElem){
 		
 	    switch command {	
-      		case 'click'	: '''ï¿½nomElemï¿½.click();'''
-      		case 'goTo' 	: '''.get(ï¿½param.parseParameterï¿½);
+      		case 'click'	: '''«nomElem».click();'''
+      		case 'goTo' 	: '''.get(«param.parseParameter»);
 if(!cookiesAlreadyChecked) {
 	new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[@class='agree-button eu-cookie-compliance-default-button']"))).click(); //ACCEPT COOKIE
 	cookiesAlreadyChecked = true;
 }
 
 ''' 
-      		case 'write' 	: '''ï¿½nomElemï¿½.sendKeys(ï¿½param.parseParameterï¿½);''' 
-      		case 'select' 	: '''ï¿½nomElemï¿½.click();''' 
-      		case 'check' 	: '''if ( !ï¿½nomElemï¿½.isSelected() ){ï¿½nomElemï¿½.click();}''' 
-      		case 'uncheck' 	: '''if ( ï¿½nomElemï¿½.isSelected() ){ï¿½nomElemï¿½.click();}''' 
+      		case 'write' 	: '''«nomElem».sendKeys(«param.parseParameter»);''' 
+      		case 'select' 	: '''«nomElem».click();''' 
+      		case 'check' 	: '''if ( !«nomElem».isSelected() ){«nomElem».click();}''' 
+      		case 'uncheck' 	: '''
+			for(WebElement checkBox:«nomElem»)
+        	{
+           		 if(checkBox.isSelected()) checkBox.click(); 
+        	}
+        	''' 
       		case 'parent'  	: "TODO"
       		default : ""
    		 }
@@ -171,6 +176,10 @@ if(!cookiesAlreadyChecked) {
     	if(we.type == "title"){
     		return "String title"+variableIt+" = driver.getTitle();";
     	}
+    	if(we.type == "checkbox" && we.selector.property == "*"){
+    		return 
+			"List<WebElement> checkbox"+variableIt+" = driver.findElements(By.xpath(\"//input[@type='checkbox']\"));"
+    	}
     	
     	return "WebElement "+we.type+variableIt+" = "+findWebElement(we);
    	}
@@ -193,6 +202,10 @@ if(!cookiesAlreadyChecked) {
 				if(att.getAttType.equals("class")){
 					return "By.className(\""+parseAttributeValue(att.value)+"\")"
 				}
+				if(att.getAttType.equals("content")){
+					return "By.xpath(\"//"+type+getHtmlAttributeType(att.getAttType)+parseAttributeValue(att.value)+"')]\")";
+				}
+				
 				
 				return "By.xpath(\"//"+type+getHtmlAttributeType(att.getAttType)+parseAttributeValue(att.value)+"']\")";
 			}
@@ -217,11 +230,11 @@ if(!cookiesAlreadyChecked) {
    	
    	def getHtmlAttributeType(String type){
    		switch type {
-			case "content" : return "[text()='"
+			case "content" : return "[contains(text(),'"
 			case "alt" : return "[@alt='"
-			case "label" : return "[label()='"
-			case "id" : return "[id()='"
-			case "value" : return "[text()='"
+			case "label" : return "[text()='"
+			case "id" : return "[@id='"
+			case "value" : return "[@value='"
 			case "class" : return "[@class()='"
 			case "href" : return "[href()='"
 			default : ""
